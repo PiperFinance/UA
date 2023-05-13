@@ -33,6 +33,7 @@ func main() {
 	app.Get("/api/healthchecker", views.HealthCheck)
 	app.Post("/login", views.Login)
 	app.Post("/signup", views.SignUpUser)
+	app.Post("/SignUpSignIn", views.SignUpAndSignInUser)
 	app.Post("/refresh", views.RefreshToken)
 	app.Get("/users", views.OnlineUsers)
 	app.Get("/", views.Accessible)
