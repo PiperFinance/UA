@@ -11,8 +11,8 @@ services:
     ports:
       - 4500:4500
     environment:
-      - PROJECT_NAME=UA
       - PORT=4500
+      - PROJECT_NAME=UA
       - DB_USER=postgres
       - DB_PASSWORD=postgres
       - DB_HOST=db
@@ -27,6 +27,8 @@ services:
       - JWT_REFRESH_EXPIRED_IN=168h
       - JWT_ACCESS_EXPIRED_IN=100m
       - JWT_MAXAGE=168h
+    volumes:
+      - ./config:/api/config
 
     networks:
       - tp_default
