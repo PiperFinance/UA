@@ -7,8 +7,8 @@ RUN apk update && apk add alpine-sdk git && rm -rf /var/cache/apk/*
 RUN mkdir -p /api
 WORKDIR /api
 ENV PORT=8000
-COPY  ./src/go.mod .
-COPY ./src/go.sum .
+COPY  ./go.mod .
+COPY ./go.sum .
 RUN go mod download
 
 COPY ./src . 
