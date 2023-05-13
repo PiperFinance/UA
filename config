@@ -6,7 +6,7 @@ DB_USER=postgres
 DB_PASSWORD=postgres
 DB_HOST=db
 DB_PORT=5432
-DB_NAME=ua2
+DB_NAME=ua
 
 MONGO_URL=mongodb://piperFinance:Piper2022@mongo:27017
 MONGO_DBNAME="TEST_BS2"
