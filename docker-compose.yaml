@@ -38,15 +38,11 @@ services:
 
 networks:
   postgres_db:
-    external:
-      name: postgres_db
-
+    name: postgres_db
   mongo_db:
-    external:
-      name: mongo_db
+    name: mongo_db
   tp_default:
-    external:
-      name: tp_default
+    name: tp_default
   ua_default:
     driver: bridge
     name: ua_default
