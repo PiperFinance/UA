@@ -11,8 +11,8 @@ COPY  ./go.mod .
 COPY ./go.sum .
 RUN go mod download
 
-COPY ./src . 
-RUN go build -o ./app ./main.go
+COPY ./src ./src
+RUN go build -o ./app ./src/main.go
 
 FROM alpine:latest
 
