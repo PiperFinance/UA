@@ -2,44 +2,86 @@ package controllers
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/PiperFinance/UA/src/conf"
 	"github.com/PiperFinance/UA/src/models"
 	"github.com/PiperFinance/UA/src/schemas"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"
-	"strings"
-	"time"
 )
 
 func GenRefreshToken(user models.User) (string, error) {
 	tokenByte := jwt.New(jwt.SigningMethodHS256)
 
 	now := time.Now().UTC()
-	claims := tokenByte.Claims.(jwt.MapClaims)
+	expiry := now.Add(conf.Config.JwtRefreshExpiresIn).Unix()
+	claims, ok := tokenByte.Claims.(jwt.MapClaims)
+	if !ok {
+		_claim := tokenByte.Claims.Valid()
+		return "", fmt.Errorf("Bad Type Assertion %s", _claim)
+	}
 
-	claims["sub"] = user.UUID
-	claims["exp"] = now.Add(conf.Config.JwtRefreshExpiresIn).Unix()
+	claims["sub"] = *user.UUID
+	claims["exp"] = expiry
 	claims["iat"] = now.Unix()
 	claims["nbf"] = now.Unix()
 
+	//if PrevSession != nil {
+	//	PrevSession.ExpiresAt = expiry
+	//	if res := conf.DB.Save(&PrevSession); res.Error != nil {
+	//		return "", res.Error
+	//	}
+	//} else {
+	//	return "", fmt.Errorf("Refresh token needs to update a session")
+	//}
 	return tokenByte.SignedString([]byte(conf.Config.JwtRefreshSecret))
 
 }
-func GenAccessToken(user models.User) (string, error) {
+func GenAccessToken(user models.User, PrevSession *models.Session) (string, error) {
 
 	tokenByte := jwt.New(jwt.SigningMethodHS256)
 
 	now := time.Now().UTC()
+
 	claims := tokenByte.Claims.(jwt.MapClaims)
 
-	claims["adds"] = user.Add2Str()
-	claims["sub"] = user.UUID
-	claims["exp"] = now.Add(conf.Config.JwtAccessExpiresIn).Unix()
+	expiry := now.Add(conf.Config.JwtAccessExpiresIn).Unix()
+	//claims.Subject = *user.UUID
+	//claims.ExpiresAt = expiry
+	//claims.IssuedAt = now.Unix()
+	//claims.NotBefore = now.Unix()
+	//claims.SetAddresses(user.Addresses)
+
+	claims["sub"] = *user.UUID
+	claims["exp"] = expiry
 	claims["iat"] = now.Unix()
 	claims["nbf"] = now.Unix()
+	//claims["adds"] = user.Addresses
+	session := models.Session{
+		ExpiresAt: expiry,
+		UserRefer: user.UUID,
+		User:      user}
+	if PrevSession != nil {
+		session.UUID = PrevSession.UUID
+		if res := conf.DB.Save(&session); res.Error != nil {
+			return "", res.Error
+		}
+	} else {
+		if res := conf.DB.FirstOrCreate(&session); res.Error != nil {
+			return "", res.Error
+		}
+		session.ExpiresAt = expiry
+		if res := conf.DB.Save(&session); res.Error != nil {
+			return "", res.Error
+		}
 
-	return tokenByte.SignedString([]byte(conf.Config.JwtAccessSecret))
+		//claims.SessionUUID = *session.UUID
+		claims["suid"] = *session.UUID
+	}
+	token, tokenErr := tokenByte.SignedString([]byte(conf.Config.JwtAccessSecret))
+	return token, tokenErr
 
 }
 
@@ -49,17 +91,22 @@ func RefreshToken(refreshToken *jwt.Token) (string, string, error) {
 		return "", "", jwt.ErrInvalidKey
 	}
 	userUUID := claims["sub"].(string)
-	user := models.User{}
+	sessionUUID := claims["suid"].(string)
+
+	user, session := models.User{}, models.Session{}
 	if res := conf.DB.First(&user, "uuid = ?", userUUID); res.Error != nil {
 		return "", "", res.Error
+	}
+	if res := conf.DB.First(&session, "uuid = ?", sessionUUID); res.Error != nil {
+		return "", "", res.Error
+	}
+	accT, accErr := GenAccessToken(user, &session)
+	if accErr != nil {
+		return "", "", accErr
 	}
 	refT, refErr := GenRefreshToken(user)
 	if refErr != nil {
 		return "", "", refErr
-	}
-	accT, accErr := GenAccessToken(user)
-	if refErr != nil {
-		return "", "", accErr
 	}
 	user.LastAccess = time.Now().UTC()
 	return accT, refT, nil
@@ -77,30 +124,47 @@ func SignInUser(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(errors)
 	}
 
-	var user models.User
-	// TODO - GET User By Address M2M
+	users, add, user := []models.User{}, models.Address{}, models.User{}
+
 	address, err := payload.Address.ETHAddress()
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "message": err.Error()})
 	}
-	result := conf.DB.First(&user, "address = ?", strings.ToLower(address.String()))
+	if res := conf.DB.Model(&models.Address{}).Preload("Users").First(&add, "hash = ?", address.String()); res.Error != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "error": res.Error.Error()})
+	}
 
-	if result.Error != nil {
+	//// Try session !!!
+	//// .WithContext(c)
+	//// if err := conf.DB.Debug().Model(&add).Association("Users").Find(&users); err != nil {
+	//if err := conf.DB.Table("users").Preload("Users").Find(&address); err != nil {
+	//	return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "error": fmt.Sprintf("User Query: %s", err.Error.Error())})
+	//}
+
+	_ = users
+
+	userFound := false
+	for _, _user := range add.Users {
+		err = bcrypt.CompareHashAndPassword([]byte(_user.Password), []byte(payload.Password))
+		if err != nil {
+			continue
+		} else {
+			user = *_user
+			userFound = true
+			break
+		}
+	}
+	if !userFound {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "message": "Invalid email or Password"})
 	}
 
-	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(payload.Password))
+	accessToken, err := GenAccessToken(user, nil)
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "message": "Invalid email or Password"})
+		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{"status": "fail", "message": fmt.Sprintf("generating Access JWT Token failed: %v", err)})
 	}
-
 	refreshToken, err := GenRefreshToken(user)
 	if err != nil {
 		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{"status": "fail", "message": fmt.Sprintf("generating Refresh JWT Token failed: %v", err)})
-	}
-	accessToken, err := GenAccessToken(user)
-	if err != nil {
-		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{"status": "fail", "message": fmt.Sprintf("generating Access JWT Token failed: %v", err)})
 	}
 
 	c.Cookie(&fiber.Cookie{

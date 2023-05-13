@@ -18,7 +18,7 @@ type User struct {
 	Password    string       `gorm:"type:varchar(100);not null" json:"-"`
 	Verified    *bool        `gorm:"not null;default:false"`
 	Devices     []Device     `gorm:"many2many:user_devices;"`
-	Addresses   []Address    `gorm:"many2many:user_addresses;"`
+	Addresses   []*Address   `gorm:"many2many:user_addresses;"`
 	LastAccess  time.Time    `json:"LastAccess" `
 }
 

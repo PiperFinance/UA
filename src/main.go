@@ -20,6 +20,7 @@ func init() {
 		&models.User{},
 		&models.Address{},
 		&models.Device{},
+		&models.Session{},
 	); err != nil {
 		log.Fatal(err)
 	}
@@ -28,19 +29,21 @@ func init() {
 func main() {
 
 	app := fiber.New()
+	// No Auth
+	app.Get("/api/healthchecker", views.HealthCheck)
+	app.Post("/login", views.Login)
+	app.Post("/signup", views.SignUpUser)
+	app.Post("/refresh", views.RefreshToken)
+	app.Get("/users", views.OnlineUsers)
+	app.Get("/", views.Accessible)
+
 	// JWT Middleware
 	app.Use(jwtware.New(jwtware.Config{
 		SigningKey:        []byte(conf.Config.JwtAccessSecret),
 		KeyRefreshTimeout: &conf.Config.JwtRefreshExpiresIn}))
-	//Api
-	app.Get("/api/healthchecker", views.HealthCheck)
-	//User
-	app.Post("/login", views.Login)
-	app.Post("/signup", views.SignUpUser)
-	app.Post("/refresh", views.RefreshToken)
+	// Api with Needs Auth
 
 	// Unauthenticated route
-	app.Get("/", views.Accessible)
 	// Restricted Routes
 	app.Get("/restricted", views.Restricted)
 	app.Post("/", views.BodyParserSample)

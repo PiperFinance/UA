@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/PiperFinance/UA/src/conf"
 	"github.com/charmbracelet/log"
 	"github.com/google/uuid"
@@ -43,9 +44,9 @@ func init() {
 	if err := conf.ConnectDB(); err != nil {
 		log.Fatal(err)
 	}
-	if err := conf.DB.AutoMigrate(&User{}, &Language{}); err != nil {
-		log.Fatal(err)
-	}
+	//if err := conf.DB.AutoMigrate(&User{}, &Language{}); err != nil {
+	//	log.Fatal(err)
+	//}
 }
 
 func main() {
@@ -95,5 +96,12 @@ func main() {
 	//}
 	//_ = users
 	//_ = langs
+	lang := Language{}
+	users := []User{}
+
+	conf.DB.First(&lang, "name = ?", "Persian")
+	fmt.Println(conf.DB.Model(&lang).Association("Users").Find(&users))
+	fmt.Println(lang.Users, lang.ID)
+	fmt.Println(users)
 
 }

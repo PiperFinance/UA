@@ -1,17 +1,21 @@
 package models
 
 import (
-	"bytes"
 	"errors"
+	"fmt"
+
+	"github.com/ethereum/go-ethereum/accounts"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
 var NotETHAddress = errors.New("address is not in a evm-compatible chain")
 
 type Address struct {
-	Hash  string `gorm:"primaryKey" validate:"required"`
-	Chain int64
+	Hash  string  `gorm:"primaryKey" validate:"required"`
+	Chain int64   // 1 -> ETH , negative values for non - evm chains
+	Users []*User `gorm:"many2many:user_addresses;"`
 }
 
 // ETHAddress error if address is not evm compatible ...
@@ -26,42 +30,32 @@ func (a Address) ETHAddress() (common.Address, error) {
 // TODO - DO the same for other chains
 
 func (a Address) VerifySignedMsg(OrgStr string, SignedMsg string) (bool, error) {
-	return a.VerifySignedBytes([]byte(OrgStr), []byte(SignedMsg))
+	signature, err := hexutil.Decode(SignedMsg)
+	if err != nil {
+		return false, fmt.Errorf("decode signature: %w", err)
+	}
+	return a.VerifySignedBytes([]byte(OrgStr), signature)
 }
-func (a Address) VerifySignedBytes(OrgBytes []byte, SignedBytes []byte) (bool, error) {
-	sigPublicKey, err := crypto.Ecrecover(OrgBytes, SignedBytes)
+
+func (a Address) VerifySignedBytes(msg []byte, sig []byte) (bool, error) {
+
+	msg = accounts.TextHash(msg)
+	if sig[crypto.RecoveryIDOffset] == 27 || sig[crypto.RecoveryIDOffset] == 28 {
+		sig[crypto.RecoveryIDOffset] -= 27 // Transform yellow paper V from 27/28 to 0/1
+	}
+
+	recovered, err := crypto.SigToPub(msg, sig)
 	if err != nil {
 		return false, err
 	}
-	add, err := a.ETHAddress()
+
+	recoveredAddr := crypto.PubkeyToAddress(*recovered)
+
+	from, err := a.ETHAddress()
 	if err != nil {
+		// TODO - Implemnentaion is left for other chains ...
 		return false, err
 	}
-	return bytes.Equal(add.Bytes(), sigPublicKey), nil
+	return from.Hex() == recoveredAddr.Hex(), nil
+
 }
-
-// TODO
-//func (a Address) RecoverSignedMsg(PrivateKey) {
-//
-//}
-
-//sigPublicKey, err := crypto.Ecrecover(hash.Bytes(), signature)
-//if err != nil {
-//	log.Fatal(err)
-//}
-//
-//matches := bytes.Equal(sigPublicKey, publicKeyBytes)
-//fmt.Println(matches) // true
-//
-//sigPublicKeyECDSA, err := crypto.SigToPub(hash.Bytes(), signature)
-//if err != nil {
-//	log.Fatal(err)
-//}
-//
-//sigPublicKeyBytes := crypto.FromECDSAPub(sigPublicKeyECDSA)
-//matches = bytes.Equal(sigPublicKeyBytes, publicKeyBytes)
-//fmt.Println(matches) // true
-//
-//signatureNoRecoverID := signature[:len(signature)-1] // remove recovery id
-//verified := crypto.VerifySignature(publicKeyBytes, hash.Bytes(), signatureNoRecoverID)
-//fmt.Println(verified) // true
