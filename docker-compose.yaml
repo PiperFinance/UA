@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+  ua:
+    hostname: ua
+    container_name: ua
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 4500:4500
+    environment:
+      - PROJECT_NAME=UA
+      - PORT=4500
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=ua
+      - REDIS_URL=redis://redis:6379
+      - TP_SERVER=http://tp:9765
+      - MONGO_URL=mongodb://piperFinance:Piper2022@mongo:27017
+      - MONGO_DBNAME="TEST_BS2"
+      - JWT_ACCESS_SECRET=my_ultra_secure_secret
+      - JWT_REFRESH_SECRET=my_ultra_secure_secret
+      - JWT_REFRESH_EXPIRED_IN=168h
+      - JWT_ACCESS_EXPIRED_IN=100m
+      - JWT_MAXAGE=168h
+
+    networks:
+      - tp_default
+      - ua_default
+      - postgres_db
+      - mongo_db
+
+networks:
+  postgres_db:
+    external:
+      name: postgres_db
+
+  mongo_db:
+    external:
+      name: mongo_db
+  tp_default:
+    external:
+      name: tp_default
+  ua_default:
+    driver: bridge
+    name: ua_default
