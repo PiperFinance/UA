@@ -6,6 +6,7 @@ import (
 	"github.com/PiperFinance/UA/src/views"
 	"github.com/charmbracelet/log"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	jwtware "github.com/gofiber/jwt/v3"
 )
 
@@ -29,10 +30,14 @@ func init() {
 func main() {
 
 	app := fiber.New()
+	// Initialize default config
+	app.Use(cors.New())
+
 	// No Auth
 	app.Get("/api/healthchecker", views.HealthCheck)
 	app.Post("/login", views.Login)
 	app.Post("/signup", views.SignUpUser)
+	app.Post("/SignUpSignIn", views.SignUpAndSignInUser)
 	app.Post("/refresh", views.RefreshToken)
 	app.Get("/users", views.OnlineUsers)
 	app.Get("/", views.Accessible)

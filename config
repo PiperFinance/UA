@@ -8,7 +8,7 @@ DB_HOST=localhost
 DB_PORT=5432
 DB_NAME=ua2
 
-MONGO_URL=mongodb://localhost:27017
+MONGO_URL=mongodb://piperFinance:Piper2022@mongo:27017
 MONGO_DBNAME="TEST_BS2"
 
 JWT_ACCESS_SECRET=my_ultra_secure_secret

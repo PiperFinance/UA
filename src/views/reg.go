@@ -6,7 +6,11 @@ import (
 )
 
 func SignUpUser(c *fiber.Ctx) error {
-
 	return controllers.SignUpUser(c)
+}
 
+func SignUpAndSignInUser(c *fiber.Ctx) error {
+
+	controllers.SignUpUser(c)
+	return controllers.SignInUser(c)
 }
