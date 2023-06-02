@@ -38,6 +38,7 @@ func main() {
 	app.Post("/signup", views.SignUpUser)
 	app.Post("/SignUpSignIn", views.SignUpAndSignInUser)
 	app.Post("/refresh", views.RefreshToken)
+	app.Get("/address/", views.AllAddresses)
 	app.Get("/users/", views.AllUsers)
 	app.Get("/users/online", views.OnlineUsers)
 	app.Get("/users/offline", views.OfflineUsers)
