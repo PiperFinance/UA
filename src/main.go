@@ -28,7 +28,6 @@ func init() {
 }
 
 func main() {
-
 	app := fiber.New()
 	// Initialize default config
 	app.Use(cors.New())
@@ -39,13 +38,16 @@ func main() {
 	app.Post("/signup", views.SignUpUser)
 	app.Post("/SignUpSignIn", views.SignUpAndSignInUser)
 	app.Post("/refresh", views.RefreshToken)
-	app.Get("/users", views.OnlineUsers)
+	app.Get("/users/", views.AllUsers)
+	app.Get("/users/online", views.OnlineUsers)
+	app.Get("/users/offline", views.OfflineUsers)
 	app.Get("/", views.Accessible)
 
 	// JWT Middleware
 	app.Use(jwtware.New(jwtware.Config{
 		SigningKey:        []byte(conf.Config.JwtAccessSecret),
-		KeyRefreshTimeout: &conf.Config.JwtRefreshExpiresIn}))
+		KeyRefreshTimeout: &conf.Config.JwtRefreshExpiresIn,
+	}))
 	// Api with Needs Auth
 
 	// Unauthenticated route
@@ -56,5 +58,4 @@ func main() {
 	if err := app.Listen(":4500"); err != nil {
 		log.Fatal(err)
 	}
-
 }
