@@ -10,7 +10,7 @@ func Accessible(c *fiber.Ctx) error {
 	return c.SendString("Accessible")
 }
 
-func Restricted(c *fiber.Ctx) error {
+func Validate(c *fiber.Ctx) error {
 	user := c.Locals("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
 	name := claims["name"].(string)

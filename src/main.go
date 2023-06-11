@@ -37,6 +37,7 @@ func main() {
 	app.Post("/login", views.Login)
 	app.Post("/signup", views.SignUpUser)
 	app.Post("/SignUpSignIn", views.SignUpAndSignInUser)
+	app.Post("/SignUpSignInNoSign", views.SignUpAndSignInUserNoSign)
 	app.Post("/refresh", views.RefreshToken)
 	app.Get("/address/", views.AllAddresses)
 	app.Get("/users/", views.AllUsers)
@@ -51,10 +52,11 @@ func main() {
 	}))
 	// Api with Needs Auth
 
-	// Unauthenticated route
-	// Restricted Routes
-	app.Get("/restricted", views.Restricted)
-	app.Post("/", views.BodyParserSample)
+	app.Get("/validate", views.Validate)
+	app.Get("/whoami", views.WhoAmI)
+	app.Get("/user/address", views.GetUserAddresses)
+	app.Post("/user/address", views.AddNewAddress)
+	app.Delete("/user/address", views.RemoveAddress)
 
 	if err := app.Listen(":4500"); err != nil {
 		log.Fatal(err)

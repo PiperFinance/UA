@@ -139,3 +139,5 @@ cython_debug/
 
 # Text Editor
 .vscode
+__debug_bin
+config

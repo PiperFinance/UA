@@ -10,7 +10,11 @@ func SignUpUser(c *fiber.Ctx) error {
 }
 
 func SignUpAndSignInUser(c *fiber.Ctx) error {
-
 	controllers.SignUpUser(c)
 	return controllers.SignInUser(c)
+}
+
+func SignUpAndSignInUserNoSign(c *fiber.Ctx) error {
+	controllers.SignUpUserNoSign(c)
+	return controllers.SignInUserNoSign(c)
 }
