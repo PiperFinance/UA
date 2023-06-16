@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/PiperFinance/UA/src/conf"
+	"github.com/PiperFinance/UA/src/jobs"
 	"github.com/PiperFinance/UA/src/models"
 	"github.com/PiperFinance/UA/src/schemas"
 	"github.com/gofiber/fiber/v2"
@@ -32,6 +33,7 @@ func AddNewAddress(c *fiber.Ctx) error {
 	}
 
 	for i := range payload.Addresses {
+
 		if tx := conf.DB.Create(&payload.Addresses[i]); tx.Error != nil {
 			if strings.Contains(tx.Error.Error(), "duplicate key") {
 				conf.DB.Find(&payload.Addresses[i], "hash = ?", payload.Addresses[i].Hash)
@@ -39,7 +41,14 @@ func AddNewAddress(c *fiber.Ctx) error {
 				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"err": tx.Error.Error()})
 			}
 		}
+		o := (jobs.SyncAddress{Address: payload.Addresses[i]})
+		go func(o jobs.SyncAddress) {
+			if err := o.ExecuteAll(); err != nil {
+				conf.Logger.Error(err)
+			}
+		}(o)
 	}
+
 	user.Addresses = payload.Addresses
 	if tx := conf.DB.Save(&user); tx.Error != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"err": tx.Error.Error()})

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/charmbracelet/log"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
 )
 
@@ -46,6 +47,10 @@ func init() {
 	if err != nil {
 		log.Errorf("Client Connection Error : %s  ", err)
 	}
-	//ctx, _ := context.WithTimeout(context.Background(),time.Second * 10)
+	// ctx, _ := context.WithTimeout(context.Background(),time.Second * 10)
 	EthClient = client
+}
+
+func NetworkValueAddress(chain int64) common.Address {
+	return common.HexToAddress("0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE")
 }

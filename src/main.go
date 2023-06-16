@@ -8,15 +8,14 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	jwtware "github.com/gofiber/jwt/v3"
+	_ "github.com/joho/godotenv/autoload"
 )
 
 func init() {
-	if err := conf.LoadConfig("."); err != nil {
-		log.Fatal(err)
-	}
-	if err := conf.ConnectDB(); err != nil {
-		log.Fatal(err)
-	}
+	conf.LoadConfig()
+	conf.ConnectMongo()
+	conf.LoadLogger()
+	conf.ConnectDB()
 	if err := conf.DB.AutoMigrate(
 		&models.User{},
 		&models.Address{},
