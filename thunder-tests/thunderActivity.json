@@ -86,6 +86,25 @@
     "colId": "history",
     "containerId": "",
     "name": "SignUpSignIn",
+    "url": "http://localhost:4500/SignUpSignInNoSign",
+    "method": "POST",
+    "sortNum": 0,
+    "created": "2023-06-11T17:34:55.013Z",
+    "modified": "2023-06-16T14:27:04.866Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"name\":\"navid\",\n  \"address\":{\n    \"hash\":\"0xB49F17514D6F340d7bcdFfC47526C9A3713697e0\"\n  },\n  \"email\":\"as14735452343423444453643546r233d5@a123sd.asd\",\n  \"password\":\"asd@asd.asd\"\n  \n}",
+      "form": []
+    },
+    "tests": []
+  },
+  {
+    "_id": "5756c940-d712-4519-8731-823a11a66577",
+    "colId": "history",
+    "containerId": "",
+    "name": "SignUpSignIn-NoSign",
     "url": "http://localhost:4500/SignUpSignIn",
     "method": "POST",
     "sortNum": 0,

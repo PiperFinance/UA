@@ -106,7 +106,6 @@ func (u *SyncAddress) saveBal(c context.Context) error {
 		}
 		r := make([]schemas.UserBalance, len(u.balances[chain]))
 		x := 0
-		// TODO handle 0xeeeeeee address
 		for tokenId, userBal := range u.balances[chain] {
 			add, _ := u.Address.ETHAddress()
 			r[x] = schemas.UserBalance{
