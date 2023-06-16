@@ -22,6 +22,12 @@ RUN mkdir -p /api
 WORKDIR /api
 COPY --from=builder /api/app .
 # COPY ./src/data ./data 
+
+RUN rm -rf /var/bs/log/ | true \ 
+    && mkdir -p /var/bs/log/ \ 
+    && touch /var/bs/log/err.log \ 
+    && touch /var/bs/log/debug.log 
+
 EXPOSE 8080
 
 ENTRYPOINT ["./app"]
