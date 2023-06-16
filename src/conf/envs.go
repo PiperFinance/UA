@@ -50,9 +50,9 @@ type config struct {
 	JwtRefreshExpiresIn          time.Duration `env:"JWT_REFRESH_EXPIRED_IN"`
 	JwtMaxAge                    time.Duration `env:"JWT_MAXAGE"`
 	ClientOrigin                 string        `env:"CLIENT_ORIGIN"`
-	UserAppURL                   url.URL       `env:"UA_URL" envDefault:"https://ua.piper.finance"`
-	BlockScannerURL              url.URL       `env:"BS_URL" envDefault:"https://bs.piper.finance"`
-	PortfolioScannerURL          url.URL       `env:"PS_URL" envDefault:"https://dev_ps.piper.finance"`
+	UserAppURL                   url.URL       `env:"UA_URL" envDefault:"http://154.49.243.32:4500"`
+	BlockScannerURL              url.URL       `env:"BS_URL" envDefault:"http://154.49.243.32:6001"`
+	PortfolioScannerURL          url.URL       `env:"PS_URL" envDefault:"http://154.49.243.32:8765"`
 	PSSafeBalUrl                 string        `env:"PS_SAFE_BAL" envDefault:"/v1/tokens/balance/safe"`
 	BSSetBalURL                  string        `env:"BS_SAFE_BAL" envDefault:"/bal/%d/"`
 	PSSyncMinTimeDelay           time.Duration `env:"PS_SYNC_MIN_DELAY" envDefault:"10m"`
