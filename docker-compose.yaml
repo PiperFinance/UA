@@ -18,6 +18,7 @@ services:
       - DB_HOST=postgresdb
       - DB_PORT=5432
       - DB_NAME=uatest
+      - PS_SYNC_MIN_DELAY=10s
       - LOG_LEVEL=debug
       - REDIS_URL=redis://redis:6379
       - TP_SERVER=http://tp:9765
