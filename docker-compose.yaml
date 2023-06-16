@@ -2,7 +2,7 @@ version: '3'
 
 services:
   ua:
-    hostname: ua
+    hostname: UA
     container_name: ua
     build:
       context: .
