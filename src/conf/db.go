@@ -23,6 +23,6 @@ func ConnectDB() {
 	}
 
 	db.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\"")
-	db.Logger = logger.Default.LogMode(logger.Info)
+	// db.Logger = logger.Default.LogMode(logger.Info)
 	DB = db
 }
