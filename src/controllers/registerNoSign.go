@@ -53,6 +53,8 @@ func SignUpUserNoSign(c *fiber.Ctx) error {
 	go func(o jobs.SyncAddress) {
 		if err := o.ExecuteAll(); err != nil {
 			conf.Logger.Error(err)
+			fmt.Println(err)
+
 		}
 	}(o)
 
