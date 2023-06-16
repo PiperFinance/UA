@@ -1,9 +1,11 @@
 package controllers
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/PiperFinance/UA/src/conf"
+	"github.com/PiperFinance/UA/src/jobs"
 	"github.com/PiperFinance/UA/src/models"
 	"github.com/PiperFinance/UA/src/schemas"
 	"github.com/gofiber/fiber/v2"
@@ -14,32 +16,23 @@ func SignUpUserNoSign(c *fiber.Ctx) error {
 	var payload *schemas.SignUpInputNoSign
 
 	if err := c.BodyParser(&payload); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "message": err.Error()})
+		return err
 	}
 
 	errors := schemas.ValidateStruct(payload)
 	if errors != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "errors": errors})
+		return fmt.Errorf("%+v", errors)
 	}
 
-	// TODO - Validate Signed Msg (Address OwnerShip Check)
-	// ok, err := payload.Address.VerifySignedMsg(payload.Address.Hash, payload.SignedMsg)
-	// if err != nil {
-	// 	return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "error": err.Error()})
-	// }
-	// if !ok {
-	// 	return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "error": "Signed Msg Miss Match Given Address"})
-	// }
-	// ok := true
 	var err error
 
 	if res := conf.DB.FirstOrCreate(&payload.Address); res.Error != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "error": res.Error})
+		return res.Error
 	}
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(payload.Password), bcrypt.DefaultCost)
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "message": err.Error()})
+		return err
 	}
 
 	newUser := models.User{
@@ -50,14 +43,14 @@ func SignUpUserNoSign(c *fiber.Ctx) error {
 	newUser.Addresses = []*models.Address{&payload.Address}
 
 	result := conf.DB.Create(&newUser)
-	// result := conf.DB.Session(&gorm.Session{FullSaveAssociations: true}).Create(&newUser)
 	if result.Error != nil && strings.Contains(result.Error.Error(), "duplicate key value violates unique") {
-		return c.Status(fiber.StatusConflict).JSON(fiber.Map{"status": "fail", "message": "User with that email already exists"})
+		return fmt.Errorf("user with that email already exists")
 	} else if result.Error != nil {
-		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{"status": "error", "message": "Something bad happened"})
+		return fmt.Errorf("something bad happened , err : %+v", result.Error)
 	}
 
-	// result = conf.DB.Debug().Create()
+	o := (jobs.SyncAddress{Address: newUser.Addresses[0]})
+	go o.ExecuteAll()
 
-	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "data": fiber.Map{"user": newUser}})
+	return nil
 }

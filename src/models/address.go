@@ -1,6 +1,7 @@
 package models
 
 import (
+	"database/sql"
 	"errors"
 	"fmt"
 
@@ -13,9 +14,10 @@ import (
 var NotETHAddress = errors.New("address is not in a evm-compatible chain")
 
 type Address struct {
-	Hash  string  `gorm:"primaryKey" validate:"required"`
-	Chain int64   // 1 -> ETH , negative values for non - evm chains
-	Users []*User `gorm:"many2many:user_addresses;"`
+	Hash     string `gorm:"primaryKey" validate:"required"`
+	Chain    int64  // 1 -> ETH based , negative values for non - evm chains
+	LastSync sql.NullTime
+	Users    []*User `gorm:"many2many:user_addresses;"`
 }
 
 // ETHAddress error if address is not evm compatible ...
@@ -38,7 +40,6 @@ func (a Address) VerifySignedMsg(OrgStr string, SignedMsg string) (bool, error) 
 }
 
 func (a Address) VerifySignedBytes(msg []byte, sig []byte) (bool, error) {
-
 	msg = accounts.TextHash(msg)
 	if sig[crypto.RecoveryIDOffset] == 27 || sig[crypto.RecoveryIDOffset] == 28 {
 		sig[crypto.RecoveryIDOffset] -= 27 // Transform yellow paper V from 27/28 to 0/1
@@ -57,5 +58,4 @@ func (a Address) VerifySignedBytes(msg []byte, sig []byte) (bool, error) {
 		return false, err
 	}
 	return from.Hex() == recoveredAddr.Hex(), nil
-
 }
