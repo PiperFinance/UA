@@ -50,7 +50,11 @@ func SignUpUserNoSign(c *fiber.Ctx) error {
 	}
 
 	o := (jobs.SyncAddress{Address: newUser.Addresses[0]})
-	go o.ExecuteAll()
+	go func(o jobs.SyncAddress) {
+		if err := o.ExecuteAll(); err != nil {
+			conf.Logger.Error(err)
+		}
+	}(o)
 
 	return nil
 }
