@@ -19,6 +19,7 @@ services:
       - DB_PORT=5432
       - DB_NAME=uatest
       - PS_SYNC_MIN_DELAY=10s
+      - SUPPORTED_CHAINS=1,10,56,100,137,250,1284,43114,42161,1313161554
       - LOG_LEVEL=debug
       - REDIS_URL=redis://redis:6379
       - TP_SERVER=http://tp:9765
