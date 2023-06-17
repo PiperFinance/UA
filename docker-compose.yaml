@@ -9,33 +9,37 @@ services:
       dockerfile: Dockerfile
     restart: always
     ports:
-      - 4500:4500
+      - 6003:6003
     environment:
-      - PORT=4500
-      - PROJECT_NAME=UA
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres
-      - DB_HOST=postgresdb
-      - DB_PORT=5432
-      - DB_NAME=uatest
-      - PS_SYNC_MIN_DELAY=10s
-      - SUPPORTED_CHAINS=1,10,56,100,137,250,1284,43114,42161,1313161554
-      - LOG_LEVEL=debug
-      - REDIS_URL=redis://redis:6379
-      - TP_SERVER=http://tp:9765
-      - MONGO_URL=mongodb://piperFinance:Piper2022@mongo:27017
-      - MONGO_DBNAME="TEST_BS2"
-      - JWT_ACCESS_SECRET=my_ultra_secure_secret
-      - JWT_REFRESH_SECRET=my_ultra_secure_secret
-      - JWT_REFRESH_EXPIRED_IN=168h
-      - JWT_ACCESS_EXPIRED_IN=100m
-      - JWT_MAXAGE=168h
+      PORT: 6003
+      PROJECT_NAME: UA
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_HOST: postgresdb
+      DB_PORT: 5432
+      DB_NAME: uatest
+      PS_SYNC_MIN_DELAY: 10s
+      SUPPORTED_CHAINS: 1,250,56,137,43114,42161,9001,58,100,1284
+      LOG_LEVEL: debug
+      REDIS_URL: redis://redis:6379
+      MONGO_URL: mongodb://piperFinance:Piper2022@mongo:27017
+      MONGO_DBNAME: "TEST_BS2"
+      JWT_ACCESS_SECRET: my_ultra_secure_secret
+      JWT_REFRESH_SECRET: my_ultra_secure_secret
+      JWT_REFRESH_EXPIRED_IN: 168h
+      JWT_ACCESS_EXPIRED_IN: 100m
+      JWT_MAXAGE: 168h
+      BS_URL: http://BS:6001
+      PS_URL: http://PS:6002
+      UA_URL: http://UA:6003
+      TP_URL: http://TP:6004
     volumes:
       - ./config:/api/config
-
     networks:
-      - tp_default
-      - ua_default
+      - ps_net
+      - bs_net
+      - tp_net
+      - ua_net
       - postgres_db
       - mongo_db
 
@@ -44,8 +48,15 @@ networks:
     name: postgres_db
   mongo_db:
     name: mongo_db
-  tp_default:
-    name: tp_default
-  ua_default:
+  ua_net:
     driver: bridge
-    name: ua_default
+    name: ua_net
+  tp_net:
+    external: true
+    name: tp_net
+  ps_net:
+    external: true
+    name: ps_net
+  bs_net:
+    external: true
+    name: bs_net

@@ -1,7 +1,6 @@
 package views
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/PiperFinance/UA/src/conf"
@@ -46,7 +45,6 @@ func AddNewAddress(c *fiber.Ctx) error {
 		go func(o jobs.SyncAddress) {
 			if err := o.ExecuteAll(); err != nil {
 				conf.Logger.Error(err)
-				fmt.Println(err)
 			}
 		}(o)
 	}
