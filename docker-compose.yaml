@@ -11,7 +11,7 @@ services:
     ports:
       - 6003:6003
     environment:
-      PORT: 6003
+      API_URL: :6003
       PROJECT_NAME: UA
       DB_USER: postgres
       DB_PASSWORD: postgres

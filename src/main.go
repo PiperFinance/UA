@@ -1,14 +1,15 @@
 package main
 
 import (
-	"github.com/PiperFinance/UA/src/conf"
-	"github.com/PiperFinance/UA/src/models"
-	"github.com/PiperFinance/UA/src/views"
 	"github.com/charmbracelet/log"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	jwtware "github.com/gofiber/jwt/v3"
 	_ "github.com/joho/godotenv/autoload"
+
+	"github.com/PiperFinance/UA/src/conf"
+	"github.com/PiperFinance/UA/src/models"
+	"github.com/PiperFinance/UA/src/views"
 )
 
 func init() {
@@ -57,7 +58,7 @@ func main() {
 	app.Post("/user/address", views.AddNewAddress)
 	app.Delete("/user/address", views.RemoveAddress)
 
-	if err := app.Listen(":4500"); err != nil {
+	if err := app.Listen(conf.Config.ApiUrl); err != nil {
 		log.Fatal(err)
 	}
 }
