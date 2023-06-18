@@ -7,7 +7,7 @@ import (
 )
 
 type (
-	Id       uint32
+	Id       string
 	ChainId  int64
 	TokenDet struct {
 		ChainId     int64          `json:"chainId"`

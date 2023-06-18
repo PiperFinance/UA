@@ -42,7 +42,7 @@ func (u *SyncAddress) ExecuteAllWithContext(c context.Context) error {
 	u.cl = &http.Client{}
 
 	// STUB - sync user's bal
-	u.balRetries = 2
+	u.balRetries = 3
 	if err := u.bal(c); err != nil {
 		return err
 	}
@@ -80,6 +80,7 @@ func (u *SyncAddress) bal(c context.Context) error {
 			return err
 		}
 		if r.StatusCode >= 300 {
+			time.Sleep(5 * time.Second)
 			u.balRetries--
 			continue
 		}
