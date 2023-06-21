@@ -37,4 +37,4 @@ RUN apk update && apk add ca-certificates unzip curl \
 
 EXPOSE 8080
 
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["/api/entrypoint.sh"]
