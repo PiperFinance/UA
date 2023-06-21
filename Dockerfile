@@ -20,7 +20,7 @@ FROM alpine:latest
 RUN mkdir -p /api
 WORKDIR /api
 COPY --from=builder /api/app .
-COPY --from=builder /api/entrypoint.sh .
+COPY  entrypoint.sh .
 # COPY ./src/data ./data 
 
 RUN apk update && apk add ca-certificates unzip curl \
