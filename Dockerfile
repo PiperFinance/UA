@@ -22,9 +22,9 @@ WORKDIR /api
 COPY --from=builder /api/app .
 # COPY ./src/data ./data 
 
-ADD https://github.com/sosedoff/pgweb/releases/download/v0.14.1/pgweb_linux_amd64.zip /tmp
-RUN apk update && apk add ca-certificates unzip \
+RUN apk update && apk add ca-certificates unzip curl \
     && cd /tmp \ 
+    && curl -O -L https://github.com/sosedoff/pgweb/releases/download/v0.14.1/pgweb_linux_amd64.zip \
     && unzip pgweb_linux_arm64.zip \
     && mkdir -p /usr/bin/ \
     && mv pgweb_linux_arm64 /usr/bin/pgweb \
