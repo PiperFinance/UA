@@ -16,7 +16,6 @@ RUN go build -o ./app ./src/main.go
 
 FROM alpine:latest
 
-RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk/*
 
 RUN mkdir -p /api
 WORKDIR /api
@@ -24,16 +23,16 @@ COPY --from=builder /api/app .
 # COPY ./src/data ./data 
 
 ADD https://github.com/sosedoff/pgweb/releases/download/v0.14.1/pgweb_linux_amd64.zip /tmp
-RUN cd /tmp \
-    && apt update \
-    && apt install -y unzip \ 
+RUN apk update && apk add ca-certificates unzip \
+    && cd /tmp \ 
     && unzip pgweb_linux_arm64.zip \
     && mkdir -p /usr/bin/ \
     && mv pgweb_linux_arm64 /usr/bin/pgweb \
     && rm -rf /var/bs/log/ | true \ 
     && mkdir -p /var/bs/log/ \ 
     && touch /var/bs/log/err.log \ 
-    && touch /var/bs/log/debug.log 
+    && touch /var/bs/log/debug.log \
+    && rm -rf /var/cache/apk/*
 
 
 EXPOSE 8080
