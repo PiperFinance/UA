@@ -25,9 +25,9 @@ COPY --from=builder /api/app .
 RUN apk update && apk add ca-certificates unzip curl \
     && cd /tmp \ 
     && curl -O -L https://github.com/sosedoff/pgweb/releases/download/v0.14.1/pgweb_linux_amd64.zip \
-    && unzip pgweb_linux_arm64.zip \
+    && unzip pgweb_linux_adm64.zip \
     && mkdir -p /usr/bin/ \
-    && mv pgweb_linux_arm64 /usr/bin/pgweb \
+    && mv pgweb_linux_amd64 /usr/bin/pgweb \
     && rm -rf /var/bs/log/ | true \ 
     && mkdir -p /var/bs/log/ \ 
     && touch /var/bs/log/err.log \ 
