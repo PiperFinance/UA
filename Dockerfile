@@ -20,6 +20,7 @@ FROM alpine:latest
 RUN mkdir -p /api
 WORKDIR /api
 COPY --from=builder /api/app .
+COPY --from=builder /api/entrypoint.sh .
 # COPY ./src/data ./data 
 
 RUN apk update && apk add ca-certificates unzip curl \
@@ -37,4 +38,4 @@ RUN apk update && apk add ca-certificates unzip curl \
 
 EXPOSE 8080
 
-ENTRYPOINT ["/api/entrypoint.sh"]
+ENTRYPOINT ["./entrypoint.sh"]
