@@ -58,6 +58,20 @@ func main() {
 	app.Post("/user/address", views.AddNewAddress)
 	app.Delete("/user/address", views.RemoveAddress)
 
+	// Admin := admin.New(&admin.AdminConfig{DB: conf.DB})
+	// // Allow to use Admin to manage User, Product
+	// Admin.AddResource(&User{})
+	// Admin.AddResource(&Product{})
+
+	// // initialize an HTTP request multiplexer
+	// mux := http.NewServeMux()
+
+	// // Mount admin interface to mux
+	// Admin.MountTo("/admin", mux)
+
+	// fmt.Println("Listening on: 9000")
+	// http.ListenAndServe(":9000", mux)
+
 	if err := app.Listen(conf.Config.ApiUrl); err != nil {
 		log.Fatal(err)
 	}

@@ -141,3 +141,4 @@ cython_debug/
 .vscode
 __debug_bin
 config
+pgweb_linux_amd64*

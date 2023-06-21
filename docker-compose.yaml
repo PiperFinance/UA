@@ -10,8 +10,12 @@ services:
     restart: always
     ports:
       - 6003:6003
+      - 9010:9010
     environment:
       API_URL: :6003
+      PGWEB_PORT: 9010
+      PGWEB_AUTH_USER: piperFinance
+      PGWEB_AUTH_PASS: Piper2022
       PROJECT_NAME: UA
       DB_USER: postgres
       DB_PASSWORD: postgres
@@ -33,6 +37,11 @@ services:
       PS_URL: http://PS:6002
       UA_URL: http://UA:6003
       TP_URL: http://TP:6004
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5M"
+        max-file: "2"
     volumes:
       - ./config:/api/config
     networks:
