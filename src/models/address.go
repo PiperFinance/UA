@@ -11,7 +11,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
-var NotETHAddress = errors.New("address is not in a evm-compatible chain")
+var ErrNotETHAddress = errors.New("address is not in a evm-compatible chain")
 
 type Address struct {
 	Hash     string `gorm:"primaryKey" validate:"required"`
@@ -25,7 +25,7 @@ func (a Address) ETHAddress() (common.Address, error) {
 	if common.IsHexAddress(a.Hash) {
 		return common.HexToAddress(a.Hash), nil
 	} else {
-		return common.Address{}, NotETHAddress
+		return common.Address{}, ErrNotETHAddress
 	}
 }
 

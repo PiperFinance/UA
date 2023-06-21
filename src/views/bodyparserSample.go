@@ -1,22 +1,12 @@
 package views
 
 import (
-	"github.com/PiperFinance/UA/src/conf"
-	"github.com/PiperFinance/UA/src/models"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
+
+	"github.com/PiperFinance/UA/src/conf"
+	"github.com/PiperFinance/UA/src/models"
 )
-
-// type AuthReq struct {
-// 	ChainId    int32     `json:"chainId" validate:"required"`
-// 	EthAddress string    `json:"ethAdd" validate:"required,eth_addr" `
-// 	UserUUID   uuid.UUID `json:"UID" validate:"uuid"`
-// 	SignedMsg  []byte    `json:"signedMsg" validate:"hexadecimal"`
-// }
-
-func UserAddress(c *fiber.Ctx) error {
-	return nil
-}
 
 func WhoAmI(c *fiber.Ctx) error {
 	localUser := c.Locals("user").(*jwt.Token)

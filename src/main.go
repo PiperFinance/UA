@@ -22,6 +22,7 @@ func init() {
 		&models.Address{},
 		&models.Device{},
 		&models.Session{},
+		&models.SwapRequest{},
 	); err != nil {
 		log.Fatal(err)
 	}
@@ -49,6 +50,11 @@ func main() {
 	app.Use(jwtware.New(jwtware.Config{
 		SigningKey:        []byte(conf.Config.JwtAccessSecret),
 		KeyRefreshTimeout: &conf.Config.JwtRefreshExpiresIn,
+		ErrorHandler: func(c *fiber.Ctx, err error) error {
+			log.Error(err)
+			log.Info(c)
+			return err
+		},
 	}))
 	// Api with Needs Auth
 
@@ -58,19 +64,9 @@ func main() {
 	app.Post("/user/address", views.AddNewAddress)
 	app.Delete("/user/address", views.RemoveAddress)
 
-	// Admin := admin.New(&admin.AdminConfig{DB: conf.DB})
-	// // Allow to use Admin to manage User, Product
-	// Admin.AddResource(&User{})
-	// Admin.AddResource(&Product{})
-
-	// // initialize an HTTP request multiplexer
-	// mux := http.NewServeMux()
-
-	// // Mount admin interface to mux
-	// Admin.MountTo("/admin", mux)
-
-	// fmt.Println("Listening on: 9000")
-	// http.ListenAndServe(":9000", mux)
+	app.Get("/user/tx", views.SwapReqHistory)
+	app.Get("/user/tx/:uuid", views.SwapReqDet)
+	app.Post("/user/tx", views.NewSwapReq)
 
 	if err := app.Listen(conf.Config.ApiUrl); err != nil {
 		log.Fatal(err)

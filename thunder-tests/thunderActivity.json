@@ -8,12 +8,12 @@
     "method": "GET",
     "sortNum": 0,
     "created": "2023-06-11T17:30:32.400Z",
-    "modified": "2023-06-11T17:41:38.195Z",
+    "modified": "2023-06-21T20:00:32.371Z",
     "headers": [],
     "params": [],
     "auth": {
       "type": "bearer",
-      "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODY1MTEwMDIsImlhdCI6MTY4NjUwNTAwMiwibmJmIjoxNjg2NTA1MDAyLCJzdWIiOiIyYTVhNmQ3Ni0xYWVlLTRiZDEtOTg1OC1mMjNjYjgyMGI0MjIiLCJzdWlkIjoiOWZlYTRjZmEtMjEzMC00YWM1LTllMGEtMjVjZWJlMzVlNGYwIn0.Jf9_PwNQ0sJ7TOgERS3y0-mVT-1-Rw9Z9ycP8dLg7LE"
+      "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODczNzcwOTgsImlhdCI6MTY4NzM3NzA5OCwibmJmIjoxNjg3Mzc3MDk4LCJzdWIiOiJlZWQyYmY2ZS1iNTgwLTQzYWItYTYxNy0yZmZjOGI0MzBhOWMiLCJzdWlkIjoiMmEwZGRmOGItYTE4ZC00NThkLTk3MTQtNGVmOThhYWM4ZjdiIn0.ckfBzfrd7MBBdFQMTh6rZ8msNH9ggxEk_nZmrAkx2Qs"
     },
     "tests": []
   },
@@ -26,12 +26,12 @@
     "method": "GET",
     "sortNum": 0,
     "created": "2023-06-11T17:30:32.400Z",
-    "modified": "2023-06-11T18:32:31.142Z",
+    "modified": "2023-06-21T20:13:07.429Z",
     "headers": [],
     "params": [],
     "auth": {
       "type": "bearer",
-      "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODY1MTEwMDIsImlhdCI6MTY4NjUwNTAwMiwibmJmIjoxNjg2NTA1MDAyLCJzdWIiOiIyYTVhNmQ3Ni0xYWVlLTRiZDEtOTg1OC1mMjNjYjgyMGI0MjIiLCJzdWlkIjoiOWZlYTRjZmEtMjEzMC00YWM1LTllMGEtMjVjZWJlMzVlNGYwIn0.Jf9_PwNQ0sJ7TOgERS3y0-mVT-1-Rw9Z9ycP8dLg7LE"
+      "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODczODE5NjcsImlhdCI6MTY4NzM3ODM2NywibmJmIjoxNjg3Mzc4MzY3LCJzdWIiOiJiNjA2ZmQ1Yy04ODFlLTQzMzYtOGM3Zi00YWI2ZGU1ZGExZDYiLCJzdWlkIjoiZTA1MzFlOTMtZjgyMC00NjA0LWJlMDctN2E3MzlmYTk4NjRkIn0.NQ-Oev-V2pwDOcbyjQ6GjmX_R6Mk1tsEC9a0Xm3TsSQ"
     },
     "tests": []
   },
@@ -86,16 +86,16 @@
     "colId": "history",
     "containerId": "",
     "name": "SignUpSignIn",
-    "url": "http://localhost:4500/SignUpSignInNoSign",
+    "url": "http://localhost:4500/login",
     "method": "POST",
     "sortNum": 0,
     "created": "2023-06-11T17:34:55.013Z",
-    "modified": "2023-06-16T14:27:04.866Z",
+    "modified": "2023-06-21T20:00:41.808Z",
     "headers": [],
     "params": [],
     "body": {
       "type": "json",
-      "raw": "{\n  \"name\":\"navid\",\n  \"address\":{\n    \"hash\":\"0xB49F17514D6F340d7bcdFfC47526C9A3713697e0\"\n  },\n  \"email\":\"as14735452343423444453643546r233d5@a123sd.asd\",\n  \"password\":\"asd@asd.asd\"\n  \n}",
+      "raw": "{\n  \"name\":\"navid\",\n  \"address\":{\n    \"hash\":\"0xB49F17514D6F340d7bcdFfC47526C9A3713697e0\"\n  },\n  \"email\":\"as14735452343423433344453643546r233d5@a123sd.asd\",\n  \"password\":\"asd@asd.asd\"\n  \n}",
       "form": []
     },
     "tests": []
@@ -105,17 +105,100 @@
     "colId": "history",
     "containerId": "",
     "name": "SignUpSignIn-NoSign",
-    "url": "http://localhost:4500/SignUpSignIn",
+    "url": "http://localhost:4500/SignUpSignInNoSign",
     "method": "POST",
     "sortNum": 0,
     "created": "2023-06-11T17:34:55.013Z",
-    "modified": "2023-06-11T17:36:39.619Z",
+    "modified": "2023-06-21T20:02:35.953Z",
     "headers": [],
     "params": [],
     "body": {
       "type": "json",
       "raw": "{\n  \"name\":\"navid\",\n  \"address\":{\n    \"hash\":\"0x85449f468eaB5E1Bb52e6101106CB753Ba4f7cd1\"\n  },\n  \"email\":\"asd@asd.asd\",\n  \"password\":\"asd@asd.asd\",\n  \"signedMsg\":\"0xb2dada0d8fcfce587378d844355543f24bb582d73c151aa7819acc119e0b263303883287988f466da28bd782c418ced185ffb3f4bad0dba75c5eeb4aec9dcb581b\"\n}",
       "form": []
+    },
+    "tests": []
+  },
+  {
+    "_id": "43b1ae0c-102b-4d28-a7fb-adfa70a9ecc0",
+    "colId": "history",
+    "containerId": "",
+    "name": "Login",
+    "url": "http://localhost:1300/SignUpSignInNoSign",
+    "method": "POST",
+    "sortNum": 0,
+    "created": "2023-06-11T17:34:55.013Z",
+    "modified": "2023-06-21T19:47:36.865Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"name\":\"navid\",\n  \"address\":{\n    \"hash\":\"0xB49F17514D6F340d7bcdFfC47526C9A3713697e0\"\n  },\n  \"email\":\"as1473545234342343344453643546r233d5@a123sd.asd\",\n  \"password\":\"asd@asd.asd\"\n  \n}",
+      "form": []
+    },
+    "tests": []
+  },
+  {
+    "_id": "1840bc46-9060-479b-9e14-cca692532351",
+    "colId": "history",
+    "containerId": "",
+    "name": "SwapReq",
+    "url": "http://localhost:4500/user/tx",
+    "method": "POST",
+    "sortNum": 0,
+    "created": "2023-06-11T17:34:55.013Z",
+    "modified": "2023-06-21T20:29:31.260Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"address\":{\n    \"hash\":\"0x85449f468eaB5E1Bb52e6101106CB753Ba4f7cd1\"\n  },\n  \"chainId\":137,\n  \"fromTokenId\":\"askldhjl\",\n  \"toTokenId\":\"askldhjl\"\n}",
+      "form": []
+    },
+    "auth": {
+      "type": "bearer",
+      "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODczODE5NjcsImlhdCI6MTY4NzM3ODM2NywibmJmIjoxNjg3Mzc4MzY3LCJzdWIiOiJiNjA2ZmQ1Yy04ODFlLTQzMzYtOGM3Zi00YWI2ZGU1ZGExZDYiLCJzdWlkIjoiZTA1MzFlOTMtZjgyMC00NjA0LWJlMDctN2E3MzlmYTk4NjRkIn0.NQ-Oev-V2pwDOcbyjQ6GjmX_R6Mk1tsEC9a0Xm3TsSQ"
+    },
+    "tests": []
+  },
+  {
+    "_id": "fa676d50-97cb-47c5-8860-40fa52565160",
+    "colId": "history",
+    "containerId": "",
+    "name": "SwapReq Det",
+    "url": "http://localhost:4500/user/tx/07a78874-74aa-4185-a092-910eb7be94b9",
+    "method": "GET",
+    "sortNum": 0,
+    "created": "2023-06-11T17:34:55.013Z",
+    "modified": "2023-06-21T20:29:16.743Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"address\":{\n    \"hash\":\"0x85449f468eaB5E1Bb52e6101106CB753Ba4f7cd1\"\n  },\n  \"chainId\":137,\n  \"fromTokenId\":\"askldhjl\",\n  \"toTokenId\":\"askldhjl\"\n}",
+      "form": []
+    },
+    "auth": {
+      "type": "bearer",
+      "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODczODE5NjcsImlhdCI6MTY4NzM3ODM2NywibmJmIjoxNjg3Mzc4MzY3LCJzdWIiOiJiNjA2ZmQ1Yy04ODFlLTQzMzYtOGM3Zi00YWI2ZGU1ZGExZDYiLCJzdWlkIjoiZTA1MzFlOTMtZjgyMC00NjA0LWJlMDctN2E3MzlmYTk4NjRkIn0.NQ-Oev-V2pwDOcbyjQ6GjmX_R6Mk1tsEC9a0Xm3TsSQ"
+    },
+    "tests": []
+  },
+  {
+    "_id": "55c4c256-ac4f-4f65-b2fe-e568d9462e25",
+    "colId": "history",
+    "containerId": "",
+    "name": "SwapReq History",
+    "url": "http://localhost:4500/user/tx",
+    "method": "GET",
+    "sortNum": 0,
+    "created": "2023-06-11T17:34:55.013Z",
+    "modified": "2023-06-21T20:29:49.637Z",
+    "headers": [],
+    "params": [],
+    "auth": {
+      "type": "bearer",
+      "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODczODE5NjcsImlhdCI6MTY4NzM3ODM2NywibmJmIjoxNjg3Mzc4MzY3LCJzdWIiOiJiNjA2ZmQ1Yy04ODFlLTQzMzYtOGM3Zi00YWI2ZGU1ZGExZDYiLCJzdWlkIjoiZTA1MzFlOTMtZjgyMC00NjA0LWJlMDctN2E3MzlmYTk4NjRkIn0.NQ-Oev-V2pwDOcbyjQ6GjmX_R6Mk1tsEC9a0Xm3TsSQ"
     },
     "tests": []
   }
