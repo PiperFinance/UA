@@ -23,7 +23,7 @@ services:
       DB_PORT: 5432
       DB_NAME: uatest
       PS_SYNC_MIN_DELAY: 10s
-      SUPPORTED_CHAINS: 1,250,56,137,43114,42161,9001,58,100,1284
+      SUPPORTED_CHAINS: 1,250,56,137,43114,42161,9001,58,100,1284,10,1313161554
       LOG_LEVEL: debug
       REDIS_URL: redis://redis:6379
       MONGO_URL: mongodb://piperFinance:Piper2022@mongo:27017
