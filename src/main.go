@@ -39,7 +39,6 @@ func main() {
 	app.Post("/signup", views.SignUpUser)
 	app.Post("/SignUpSignIn", views.SignUpAndSignInUser)
 	app.Post("/SignUpSignInNoSign", views.SignUpAndSignInUserNoSign)
-	app.Post("/refresh", views.RefreshToken)
 	app.Get("/address/", views.AllAddresses)
 	app.Get("/users/", views.AllUsers)
 	app.Get("/users/online", views.OnlineUsers)
@@ -52,6 +51,7 @@ func main() {
 	}))
 
 	// Api with Needs Auth
+	app.Post("/token/refresh", views.RefreshToken)
 	app.Get("/token/validate", views.Validate)
 	app.Get("/user/whoami", views.WhoAmI)
 	app.Get("/user/address", views.GetUserAddresses)
