@@ -40,11 +40,11 @@
     "colId": "history",
     "containerId": "",
     "name": "NewAddress",
-    "url": "http://localhost:4500/user/address",
+    "url": "https://ua.piper.finance/user/address",
     "method": "POST",
     "sortNum": 0,
     "created": "2023-06-11T17:30:32.400Z",
-    "modified": "2023-06-11T18:29:00.933Z",
+    "modified": "2023-06-25T20:22:04.918Z",
     "headers": [],
     "params": [],
     "body": {

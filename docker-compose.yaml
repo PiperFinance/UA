@@ -31,7 +31,7 @@ services:
       JWT_ACCESS_SECRET: my_ultra_secure_secret
       JWT_REFRESH_SECRET: my_ultra_secure_secret
       JWT_REFRESH_EXPIRED_IN: 168h
-      JWT_ACCESS_EXPIRED_IN: 100m
+      JWT_ACCESS_EXPIRED_IN: 100h
       JWT_MAXAGE: 168h
       BS_URL: http://BS:6001
       PS_URL: http://PS:6002
