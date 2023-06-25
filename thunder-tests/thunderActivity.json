@@ -22,16 +22,16 @@
     "colId": "history",
     "containerId": "",
     "name": "Address",
-    "url": "http://localhost:4500/user/address",
+    "url": "https://ua.piper.finance/user/address",
     "method": "GET",
     "sortNum": 0,
     "created": "2023-06-11T17:30:32.400Z",
-    "modified": "2023-06-21T20:13:07.429Z",
+    "modified": "2023-06-25T19:37:19.297Z",
     "headers": [],
     "params": [],
     "auth": {
       "type": "bearer",
-      "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODczODE5NjcsImlhdCI6MTY4NzM3ODM2NywibmJmIjoxNjg3Mzc4MzY3LCJzdWIiOiJiNjA2ZmQ1Yy04ODFlLTQzMzYtOGM3Zi00YWI2ZGU1ZGExZDYiLCJzdWlkIjoiZTA1MzFlOTMtZjgyMC00NjA0LWJlMDctN2E3MzlmYTk4NjRkIn0.NQ-Oev-V2pwDOcbyjQ6GjmX_R6Mk1tsEC9a0Xm3TsSQ"
+      "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODc3MjA3ODMsImlhdCI6MTY4NzcxNDc4MywibmJmIjoxNjg3NzE0NzgzLCJzdWIiOiJlYWU3NmQ1Zi1iMzE1LTRmMzgtYWVlZi1kOTgwYjVmNjJlMmYiLCJzdWlkIjoiNGY3NzZiMGUtOGQyOC00NzU1LTk0ZjktMmY1MjhjODcwOGY4In0.d3gqqW5P4GHfOrVdi--xK15whc5Ni1NxZ0KKX4MloCo"
     },
     "tests": []
   },
