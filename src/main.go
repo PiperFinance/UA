@@ -51,8 +51,8 @@ func main() {
 		SigningKey:        []byte(conf.Config.JwtAccessSecret),
 		KeyRefreshTimeout: &conf.Config.JwtRefreshExpiresIn,
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
+			// log.Info(c)
 			log.Error(err)
-			log.Info(c)
 			return err
 		},
 	}))
