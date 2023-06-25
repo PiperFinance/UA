@@ -4,65 +4,42 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v5"
+	"golang.org/x/crypto/bcrypt"
+
 	"github.com/PiperFinance/UA/src/conf"
 	"github.com/PiperFinance/UA/src/models"
 	"github.com/PiperFinance/UA/src/schemas"
-	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt/v4"
-	"golang.org/x/crypto/bcrypt"
 )
 
 func GenRefreshToken(user models.User) (string, error) {
-	tokenByte := jwt.New(jwt.SigningMethodHS256)
-
 	now := time.Now().UTC()
 	expiry := now.Add(conf.Config.JwtRefreshExpiresIn).Unix()
-	claims, ok := tokenByte.Claims.(jwt.MapClaims)
-	if !ok {
-		_claim := tokenByte.Claims.Valid()
-		return "", fmt.Errorf("Bad Type Assertion %s", _claim)
+	claims := jwt.MapClaims{
+		"sub": *user.UUID,
+		"exp": expiry,
+		"iat": now.Unix(),
+		"nbf": now.Unix(),
 	}
-
-	claims["sub"] = *user.UUID
-	claims["exp"] = expiry
-	claims["iat"] = now.Unix()
-	claims["nbf"] = now.Unix()
-
-	//if PrevSession != nil {
-	//	PrevSession.ExpiresAt = expiry
-	//	if res := conf.DB.Save(&PrevSession); res.Error != nil {
-	//		return "", res.Error
-	//	}
-	//} else {
-	//	return "", fmt.Errorf("Refresh token needs to update a session")
-	//}
-	return tokenByte.SignedString([]byte(conf.Config.JwtRefreshSecret))
-
+	t := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	return t.SignedString([]byte(conf.Config.JwtRefreshSecret))
 }
+
 func GenAccessToken(user models.User, PrevSession *models.Session) (string, error) {
-
-	tokenByte := jwt.New(jwt.SigningMethodHS256)
-
 	now := time.Now().UTC()
-
-	claims := tokenByte.Claims.(jwt.MapClaims)
-
 	expiry := now.Add(conf.Config.JwtAccessExpiresIn).Unix()
-	//claims.Subject = *user.UUID
-	//claims.ExpiresAt = expiry
-	//claims.IssuedAt = now.Unix()
-	//claims.NotBefore = now.Unix()
-	//claims.SetAddresses(user.Addresses)
-
-	claims["sub"] = *user.UUID
-	claims["exp"] = expiry
-	claims["iat"] = now.Unix()
-	claims["nbf"] = now.Unix()
-	//claims["adds"] = user.Addresses
+	claims := jwt.MapClaims{
+		"sub": *user.UUID,
+		"exp": expiry,
+		"iat": now.Unix(),
+		"nbf": now.Unix(),
+	}
 	session := models.Session{
 		ExpiresAt: expiry,
 		UserRefer: user.UUID,
-		User:      user}
+		User:      user,
+	}
 	if PrevSession != nil {
 		session.UUID = PrevSession.UUID
 		if res := conf.DB.Save(&session); res.Error != nil {
@@ -77,12 +54,10 @@ func GenAccessToken(user models.User, PrevSession *models.Session) (string, erro
 			return "", res.Error
 		}
 
-		//claims.SessionUUID = *session.UUID
 		claims["suid"] = *session.UUID
 	}
-	token, tokenErr := tokenByte.SignedString([]byte(conf.Config.JwtAccessSecret))
-	return token, tokenErr
-
+	t := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	return t.SignedString([]byte(conf.Config.JwtAccessSecret))
 }
 
 func RefreshToken(refreshToken *jwt.Token) (string, string, error) {
@@ -189,5 +164,6 @@ func SignInUser(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"status":       "success",
 		"refreshToken": refreshToken,
-		"accessToken":  accessToken})
+		"accessToken":  accessToken,
+	})
 }

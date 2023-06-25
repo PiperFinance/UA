@@ -2,9 +2,9 @@ package main
 
 import (
 	"github.com/charmbracelet/log"
+	jwtware "github.com/gofiber/contrib/jwt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	jwtware "github.com/gofiber/jwt/v3"
 	_ "github.com/joho/godotenv/autoload"
 
 	"github.com/PiperFinance/UA/src/conf"
@@ -48,18 +48,12 @@ func main() {
 
 	// JWT Middleware
 	app.Use(jwtware.New(jwtware.Config{
-		SigningKey:        []byte(conf.Config.JwtAccessSecret),
-		KeyRefreshTimeout: &conf.Config.JwtRefreshExpiresIn,
-		ErrorHandler: func(c *fiber.Ctx, err error) error {
-			// log.Info(c)
-			log.Error(err)
-			return err
-		},
+		SigningKey: jwtware.SigningKey{Key: []byte(conf.Config.JwtAccessSecret)},
 	}))
-	// Api with Needs Auth
 
-	app.Get("/validate", views.Validate)
-	app.Get("/whoami", views.WhoAmI)
+	// Api with Needs Auth
+	app.Get("/token/validate", views.Validate)
+	app.Get("/user/whoami", views.WhoAmI)
 	app.Get("/user/address", views.GetUserAddresses)
 	app.Post("/user/address", views.AddNewAddress)
 	app.Delete("/user/address", views.RemoveAddress)

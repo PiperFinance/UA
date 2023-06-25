@@ -1,9 +1,10 @@
 package views
 
 import (
-	"github.com/PiperFinance/UA/src/controllers"
 	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt/v4"
+	"github.com/golang-jwt/jwt/v5"
+
+	"github.com/PiperFinance/UA/src/controllers"
 )
 
 func Accessible(c *fiber.Ctx) error {

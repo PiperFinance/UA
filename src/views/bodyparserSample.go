@@ -2,7 +2,7 @@ package views
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt/v4"
+	"github.com/golang-jwt/jwt/v5"
 
 	"github.com/PiperFinance/UA/src/conf"
 	"github.com/PiperFinance/UA/src/models"

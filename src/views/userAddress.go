@@ -3,12 +3,13 @@ package views
 import (
 	"strings"
 
+	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v5"
+
 	"github.com/PiperFinance/UA/src/conf"
 	"github.com/PiperFinance/UA/src/jobs"
 	"github.com/PiperFinance/UA/src/models"
 	"github.com/PiperFinance/UA/src/schemas"
-	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt/v4"
 )
 
 func UpdateUserAddress(c *fiber.Ctx) error {
@@ -87,6 +88,8 @@ func RemoveAddress(c *fiber.Ctx) error {
 }
 
 func GetUserAddresses(c *fiber.Ctx) error {
+
+	
 	localUser := c.Locals("user").(*jwt.Token)
 	claims := localUser.Claims.(jwt.MapClaims)
 	user := models.User{}
