@@ -54,7 +54,14 @@ type config struct {
 	BlockScannerURL              url.URL       `env:"BS_URL" envDefault:"http://154.49.243.32:6001"`
 	PortfolioScannerURL          url.URL       `env:"PS_URL" envDefault:"http://154.49.243.32:8765"`
 	TokenPriceURL                url.URL       `env:"TP_URL" envDefault:"http://154.49.243.32:8765"`
-	PSSafeBalUrl                 string        `env:"PS_SAFE_BAL" envDefault:"/v1/tokens/balance/safe"`
+	TH_URL                       url.URL       `env:"TH_URL" envDefault:"http://154.49.243.32:23456"`
+	THSaveTransactions           string        `env:"TH_SAVE_URL" envDefault:"/save_users_trxs"`
+	THSaveTimeout                time.Duration `env:"TH_SAVE_TIMEOUT" envDefault:"2m"`
+	NT_URL                       url.URL       `env:"NT_URL" envDefault:"http://154.49.243.32:34567"`
+	NTSaveNFTs                   string        `env:"NT_SAVE_URL" envDefault:"/save_users_nfts"`
+	NTSaveTimeout                time.Duration `env:"TH_SAVE_TIMEOUT" envDefault:"1m"`
+	PSSafeTokenBalUrl            string        `env:"PS_SAFE_TOKEN_BAL" envDefault:"/v1/tokens/balance/safe"`
+	PSSafePairBalUrl             string        `env:"PS_SAFE_PAIR_BAL" envDefault:"/v1/pairs/balance/safe"`
 	BSSetBalURL                  string        `env:"BS_SAFE_BAL" envDefault:"/bal/%d/"`
 	PSSyncMinTimeDelay           time.Duration `env:"PS_SYNC_MIN_DELAY" envDefault:"10m"`
 

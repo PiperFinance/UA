@@ -13,20 +13,22 @@ import (
 	"github.com/PiperFinance/UA/src/schemas"
 )
 
-func GenRefreshToken(user models.User) (string, error) {
+func GenRefreshToken(user models.User, session *models.Session) (string, error) {
 	now := time.Now().UTC()
 	expiry := now.Add(conf.Config.JwtRefreshExpiresIn).Unix()
 	claims := jwt.MapClaims{
-		"sub": *user.UUID,
-		"exp": expiry,
-		"iat": now.Unix(),
-		"nbf": now.Unix(),
+		"sub":  *user.UUID,
+		"exp":  expiry,
+		"iat":  now.Unix(),
+		"nbf":  now.Unix(),
+		"suid": *session.UUID,
 	}
 	t := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return t.SignedString([]byte(conf.Config.JwtRefreshSecret))
 }
 
-func GenAccessToken(user models.User, PrevSession *models.Session) (string, error) {
+func GenAccessToken(user models.User, PrevSession *models.Session) (*models.Session, string, error) {
+	// TODO - Add more stuff to token that actually have some usage :)
 	now := time.Now().UTC()
 	expiry := now.Add(conf.Config.JwtAccessExpiresIn).Unix()
 	claims := jwt.MapClaims{
@@ -43,21 +45,21 @@ func GenAccessToken(user models.User, PrevSession *models.Session) (string, erro
 	if PrevSession != nil {
 		session.UUID = PrevSession.UUID
 		if res := conf.DB.Save(&session); res.Error != nil {
-			return "", res.Error
+			return nil, "", res.Error
 		}
 	} else {
 		if res := conf.DB.FirstOrCreate(&session); res.Error != nil {
-			return "", res.Error
+			return nil, "", res.Error
 		}
 		session.ExpiresAt = expiry
 		if res := conf.DB.Save(&session); res.Error != nil {
-			return "", res.Error
+			return nil, "", res.Error
 		}
-
-		claims["suid"] = *session.UUID
 	}
+	claims["suid"] = *session.UUID
 	t := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return t.SignedString([]byte(conf.Config.JwtAccessSecret))
+	token, err := t.SignedString([]byte(conf.Config.JwtAccessSecret))
+	return &session, token, err
 }
 
 func RefreshToken(refreshToken *jwt.Token) (string, string, error) {
@@ -65,8 +67,15 @@ func RefreshToken(refreshToken *jwt.Token) (string, string, error) {
 	if !ok {
 		return "", "", jwt.ErrInvalidKey
 	}
-	userUUID := claims["sub"].(string)
-	sessionUUID := claims["suid"].(string)
+	userUUID, ok := claims["sub"].(string)
+	if !ok {
+		return "", "", fmt.Errorf("Bad session in token")
+	}
+
+	sessionUUID, ok := claims["suid"].(string)
+	if !ok {
+		return "", "", fmt.Errorf("Bad session in token")
+	}
 
 	user, session := models.User{}, models.Session{}
 	if res := conf.DB.First(&user, "uuid = ?", userUUID); res.Error != nil {
@@ -75,11 +84,11 @@ func RefreshToken(refreshToken *jwt.Token) (string, string, error) {
 	if res := conf.DB.First(&session, "uuid = ?", sessionUUID); res.Error != nil {
 		return "", "", res.Error
 	}
-	accT, accErr := GenAccessToken(user, &session)
+	newSession, accT, accErr := GenAccessToken(user, &session)
 	if accErr != nil {
 		return "", "", accErr
 	}
-	refT, refErr := GenRefreshToken(user)
+	refT, refErr := GenRefreshToken(user, newSession)
 	if refErr != nil {
 		return "", "", refErr
 	}
@@ -133,33 +142,33 @@ func SignInUser(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "message": "Invalid email or Password"})
 	}
 
-	accessToken, err := GenAccessToken(user, nil)
+	session, accessToken, err := GenAccessToken(user, nil)
 	if err != nil {
 		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{"status": "fail", "message": fmt.Sprintf("generating Access JWT Token failed: %v", err)})
 	}
-	refreshToken, err := GenRefreshToken(user)
+	refreshToken, err := GenRefreshToken(user, session)
 	if err != nil {
 		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{"status": "fail", "message": fmt.Sprintf("generating Refresh JWT Token failed: %v", err)})
 	}
 
-	c.Cookie(&fiber.Cookie{
-		Name:     "refreshToken",
-		Value:    refreshToken,
-		Path:     "/",
-		MaxAge:   int(conf.Config.JwtMaxAge),
-		Secure:   false,
-		HTTPOnly: true,
-		Domain:   "localhost",
-	})
-	c.Cookie(&fiber.Cookie{
-		Name:     "accessToken",
-		Value:    accessToken,
-		Path:     "/",
-		MaxAge:   int(conf.Config.JwtMaxAge),
-		Secure:   false,
-		HTTPOnly: true,
-		Domain:   "localhost",
-	})
+	// c.Cookie(&fiber.Cookie{
+	// 	Name:     "refreshToken",
+	// 	Value:    refreshToken,
+	// 	Path:     "/",
+	// 	MaxAge:   int(conf.Config.JwtMaxAge),
+	// 	Secure:   false,
+	// 	HTTPOnly: true,
+	// 	Domain:   "localhost",
+	// })
+	// c.Cookie(&fiber.Cookie{
+	// 	Name:     "accessToken",
+	// 	Value:    accessToken,
+	// 	Path:     "/",
+	// 	MaxAge:   int(conf.Config.JwtMaxAge),
+	// 	Secure:   false,
+	// 	HTTPOnly: true,
+	// 	Domain:   "localhost",
+	// })
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"status":       "success",

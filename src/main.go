@@ -17,6 +17,7 @@ func init() {
 	conf.ConnectMongo()
 	conf.LoadLogger()
 	conf.ConnectDB()
+	conf.LoadCronTab()
 	if err := conf.DB.AutoMigrate(
 		&models.User{},
 		&models.Address{},
@@ -30,7 +31,6 @@ func init() {
 
 func main() {
 	app := fiber.New()
-	// Initialize default config
 	app.Use(cors.New())
 
 	// No Auth

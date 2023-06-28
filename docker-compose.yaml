@@ -37,6 +37,8 @@ services:
       PS_URL: http://PS:6002
       UA_URL: http://UA:6003
       TP_URL: http://TP:6004
+      TH_URL: http://th:23456
+      NT_URL: http://nt:34567
     logging:
       driver: "json-file"
       options:
@@ -49,6 +51,8 @@ services:
       - bs_net
       - tp_net
       - ua_net
+      - th_net
+      - nt_net
       - postgres_db
       - mongo_db
 
@@ -63,6 +67,12 @@ networks:
   tp_net:
     external: true
     name: tp_net
+  th_net:
+    external: true
+    name: th_default
+  nt_net:
+    external: true
+    name: nt_default
   ps_net:
     external: true
     name: ps_net

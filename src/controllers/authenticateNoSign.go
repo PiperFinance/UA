@@ -56,11 +56,11 @@ func SignInUserNoSign(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "message": "Invalid email or Password"})
 	}
 
-	accessToken, err := GenAccessToken(user, nil)
+	session, accessToken, err := GenAccessToken(user, nil)
 	if err != nil {
 		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{"status": "fail", "message": fmt.Sprintf("generating Access JWT Token failed: %v", err)})
 	}
-	refreshToken, err := GenRefreshToken(user)
+	refreshToken, err := GenRefreshToken(user, session)
 	if err != nil {
 		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{"status": "fail", "message": fmt.Sprintf("generating Refresh JWT Token failed: %v", err)})
 	}

@@ -10,8 +10,7 @@ require (
 	github.com/gofiber/jwt/v3 v3.3.9
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/google/uuid v1.3.0
-	github.com/hibiken/asynq v0.24.1
-	github.com/hibiken/asynqmon v0.7.1
+	github.com/hibiken/asynq v0.12.0
 	github.com/mileusna/useragent v1.3.2
 	github.com/swaggo/swag v1.16.1
 	go.mongodb.org/mongo-driver v1.11.4
@@ -33,7 +32,7 @@ require (
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/redis/go-redis/v9 v9.0.3 // indirect
-	github.com/robfig/cron/v3 v3.0.1 // indirect
+	github.com/robfig/cron/v3 v3.0.0 // indirect
 	github.com/stretchr/testify v1.8.3 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
@@ -85,6 +84,7 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/prometheus/client_golang v1.15.0 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
+	github.com/robfig/cron v1.2.0
 	github.com/savsgio/dictpool v0.0.0-20221023140959-7bf2e61cea94 // indirect
 	github.com/savsgio/gotils v0.0.0-20230208104028-c358bd845dee // indirect
 	github.com/shirou/gopsutil v3.21.4-0.20210419000835-c7a38de76ee5+incompatible // indirect
