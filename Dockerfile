@@ -23,7 +23,7 @@ COPY --from=builder /api/app .
 COPY  entrypoint.sh .
 # COPY ./src/data ./data 
 
-RUN apk update && apk add ca-certificates unzip curl \
+RUN apk update && apk add ca-certificates unzip curl tzdata \
     && cd /tmp \ 
     && curl -OLSs https://github.com/sosedoff/pgweb/releases/download/v0.14.1/pgweb_linux_amd64.zip \
     && unzip pgweb_linux_amd64.zip \
