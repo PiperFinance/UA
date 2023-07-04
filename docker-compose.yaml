@@ -26,6 +26,7 @@ services:
       SUPPORTED_CHAINS: 1,250,56,137,43114,42161,9001,100,1284,10,1313161554
       LOG_LEVEL: debug
       REDIS_URL: redis://redis:6379
+      REDIS_DB: 7
       MONGO_URL: mongodb://piperFinance:Piper2022@mongo:27017
       MONGO_DBNAME: "TEST_BS2"
       JWT_ACCESS_SECRET: my_ultra_secure_secret
@@ -55,6 +56,7 @@ services:
       - nt_net
       - postgres_db
       - mongo_db
+      - redis_db
 
 networks:
   postgres_db:
@@ -64,6 +66,9 @@ networks:
   ua_net:
     driver: bridge
     name: ua_net
+  redis_db:
+    external: true
+    name: redis_db
   tp_net:
     external: true
     name: tp_net
