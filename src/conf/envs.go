@@ -63,7 +63,7 @@ type config struct {
 	THSaveTimeout                time.Duration `env:"TH_SAVE_TIMEOUT" envDefault:"2m"`
 	NT_URL                       url.URL       `env:"NT_URL" envDefault:"http://154.49.243.32:34567"`
 	NTSaveNFTs                   string        `env:"NT_SAVE_URL" envDefault:"/save_users_nfts"`
-	NTSaveTimeout                time.Duration `env:"TH_SAVE_TIMEOUT" envDefault:"1m"`
+	NTSaveTimeout                time.Duration `env:"NT_SAVE_TIMEOUT" envDefault:"1m"`
 	PSSafeTokenBalUrl            string        `env:"PS_SAFE_TOKEN_BAL" envDefault:"/v1/tokens/balance/safe"`
 	PSSafePairBalUrl             string        `env:"PS_SAFE_PAIR_BAL" envDefault:"/v1/pairs/balance/safe"`
 	BSSetBalURL                  string        `env:"BS_SAFE_BAL" envDefault:"/bal/%d/"`

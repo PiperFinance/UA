@@ -49,8 +49,8 @@ func xHandlers() []conf.MuxHandler {
 
 func xSchedules() []conf.QueueSchedules {
 	return []conf.QueueSchedules{
-		{Cron: "@every 3m", Q: asynq.Queue(conf.UASyncTHQ), Timeout: conf.Config.THSaveTimeout, Key: bg.SyncTHScheduleTaskKey},
-		{Cron: "@every 1m", Q: asynq.Queue(conf.UASyncNTQ), Timeout: conf.Config.NTSaveTimeout, Key: bg.SyncNTScheduleTaskKey},
+		{Cron: "@every 50m", Q: asynq.Queue(conf.UASyncTHQ), Timeout: conf.Config.THSaveTimeout, Key: bg.SyncTHScheduleTaskKey},
+		{Cron: "@every 30m", Q: asynq.Queue(conf.UASyncNTQ), Timeout: conf.Config.NTSaveTimeout, Key: bg.SyncNTScheduleTaskKey},
 	}
 }
 
