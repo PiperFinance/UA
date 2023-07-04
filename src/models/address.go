@@ -14,10 +14,10 @@ import (
 var ErrNotETHAddress = errors.New("address is not in a evm-compatible chain")
 
 type Address struct {
-	Hash     string `gorm:"primaryKey" validate:"required"`
-	Chain    int64  // 1 -> ETH based , negative values for non - evm chains
-	LastSync sql.NullTime
-	Users    []*User `gorm:"many2many:user_addresses;"`
+	Hash     string       `gorm:"primaryKey" "json:"hash" validate:"required"`
+	Chain    int64        `json:"chain"` // 1 -> ETH based , negative values for non - evm chains
+	LastSync sql.NullTime `json:"last_sync"`
+	Users    []*User      `gorm:"many2many:user_addresses;"`
 }
 
 // ETHAddress error if address is not evm compatible ...

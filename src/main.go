@@ -5,8 +5,11 @@ import (
 	jwtware "github.com/gofiber/contrib/jwt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/hibiken/asynq"
 	_ "github.com/joho/godotenv/autoload"
 
+	"github.com/PiperFinance/UA/src/bg"
+	"github.com/PiperFinance/UA/src/bg/handlers"
 	"github.com/PiperFinance/UA/src/conf"
 	"github.com/PiperFinance/UA/src/models"
 	"github.com/PiperFinance/UA/src/views"
@@ -16,8 +19,12 @@ func init() {
 	conf.LoadConfig()
 	conf.ConnectMongo()
 	conf.LoadLogger()
+	conf.LoadRedis()
 	conf.ConnectDB()
 	conf.LoadCronTab()
+	conf.LoadQueue()
+	go conf.RunWorker(xHandlers())
+	go conf.RunScheduler(xSchedules())
 	if err := conf.DB.AutoMigrate(
 		&models.User{},
 		&models.Address{},
@@ -26,6 +33,24 @@ func init() {
 		&models.SwapRequest{},
 	); err != nil {
 		log.Fatal(err)
+	}
+}
+
+func xHandlers() []conf.MuxHandler {
+	return []conf.MuxHandler{
+		{Key: bg.SyncNTScheduleTaskKey, Handler: handlers.SyncNTFsScheduleTaskHandler, Q: asynq.Queue(conf.UASyncNTQ)},
+		{Key: bg.SyncNTTaskKey, Handler: handlers.SyncNTFsTaskHandler, Q: asynq.Queue(conf.UASyncNTQ)},
+		{Key: bg.SyncTHScheduleTaskKey, Handler: handlers.SyncTrxScheduleTaskHandler, Q: asynq.Queue(conf.UASyncTHQ)},
+		{Key: bg.SyncTHTaskKey, Handler: handlers.SyncTrxTaskHandler, Q: asynq.Queue(conf.UASyncTHQ)},
+		{Key: bg.SyncPairBalTaskKey, Handler: handlers.PairBalTaskHandler, Q: asynq.Queue(conf.UASyncBalQ)},
+		{Key: bg.SyncTokenBalTaskKey, Handler: handlers.TokenBalTaskHandler, Q: asynq.Queue(conf.UASyncBalQ)},
+	}
+}
+
+func xSchedules() []conf.QueueSchedules {
+	return []conf.QueueSchedules{
+		{Cron: "@every 3m", Q: asynq.Queue(conf.UASyncTHQ), Timeout: conf.Config.THSaveTimeout, Key: bg.SyncTHScheduleTaskKey},
+		{Cron: "@every 1m", Q: asynq.Queue(conf.UASyncNTQ), Timeout: conf.Config.NTSaveTimeout, Key: bg.SyncNTScheduleTaskKey},
 	}
 }
 

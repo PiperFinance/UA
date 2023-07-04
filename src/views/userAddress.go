@@ -6,8 +6,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
 
+	"github.com/PiperFinance/UA/src/bg/tasks"
 	"github.com/PiperFinance/UA/src/conf"
-	"github.com/PiperFinance/UA/src/jobs"
 	"github.com/PiperFinance/UA/src/models"
 	"github.com/PiperFinance/UA/src/schemas"
 )
@@ -42,12 +42,12 @@ func AddNewAddress(c *fiber.Ctx) error {
 				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"err": tx.Error.Error()})
 			}
 		}
-		o := (jobs.SyncAddress{Address: payload.Addresses[i]})
-		go func(o jobs.SyncAddress) {
-			if err := o.ExecuteAll(); err != nil {
+		go func(add *models.Address) {
+			if err := tasks.EnqueueSyncAdd(add); err != nil {
 				conf.Logger.Error(err)
 			}
-		}(o)
+		}(payload.Addresses[i])
+
 	}
 
 	user.Addresses = payload.Addresses
@@ -88,8 +88,6 @@ func RemoveAddress(c *fiber.Ctx) error {
 }
 
 func GetUserAddresses(c *fiber.Ctx) error {
-
-	
 	localUser := c.Locals("user").(*jwt.Token)
 	claims := localUser.Claims.(jwt.MapClaims)
 	user := models.User{}

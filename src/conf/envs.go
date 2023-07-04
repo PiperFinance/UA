@@ -36,6 +36,10 @@ type config struct {
 	ParseBlockTimeout            time.Duration `env:"PARSE_BLOCK_TIMEOUT" envDefault:"2m"`
 	FetchBlockTimeout            time.Duration `env:"FETCH_BLOCK_TIMEOUT" envDefault:"5m"`
 	UserBalUpdateTimeout         time.Duration `env:"USER_BAL_UPDATE_TIMEOUT" envDefault:"5m"`
+	PSV1PairSyncTimeout          time.Duration `env:"USER_PAIR_BAL_SYNC_TIMEOUT" envDefault:"5m"`
+	PSV1TokenSyncTimeout         time.Duration `env:"USER_TOKEN_BAL_SYNC_TIMEOUT" envDefault:"5m"`
+	THSyncTimeout                time.Duration `env:"TH_SYNC_TIMEOUT" envDefault:"5m"`
+	NTSyncTimeout                time.Duration `env:"NT_SYNC_TIMEOUT" envDefault:"5m"`
 	TestTimeout                  time.Duration `env:"TEST_RPC_CONNECTION_TIMEOUT" envDefault:"15s"`
 	ScanTaskTimeout              time.Duration `env:"SCAN_TASK_TIMEOUT" envDefault:"25s"`
 	UpdateOnlineUsersTaskTimeout time.Duration `env:"ONLINE_USERS_TASK_TIMEOUT" envDefault:"25s"`
@@ -50,10 +54,10 @@ type config struct {
 	JwtRefreshExpiresIn          time.Duration `env:"JWT_REFRESH_EXPIRED_IN"`
 	JwtMaxAge                    time.Duration `env:"JWT_MAXAGE"`
 	ClientOrigin                 string        `env:"CLIENT_ORIGIN"`
-	UserAppURL                   url.URL       `env:"UA_URL" envDefault:"http://154.49.243.32:4500"`
+	UserAppURL                   url.URL       `env:"UA_URL" envDefault:"http://154.49.243.32:6003"`
 	BlockScannerURL              url.URL       `env:"BS_URL" envDefault:"http://154.49.243.32:6001"`
-	PortfolioScannerURL          url.URL       `env:"PS_URL" envDefault:"http://154.49.243.32:8765"`
-	TokenPriceURL                url.URL       `env:"TP_URL" envDefault:"http://154.49.243.32:8765"`
+	PortfolioScannerURL          url.URL       `env:"PS_URL" envDefault:"http://154.49.243.32:6002"`
+	TokenPriceURL                url.URL       `env:"TP_URL" envDefault:"http://154.49.243.32:6004"`
 	TH_URL                       url.URL       `env:"TH_URL" envDefault:"http://154.49.243.32:23456"`
 	THSaveTransactions           string        `env:"TH_SAVE_URL" envDefault:"/save_users_trxs"`
 	THSaveTimeout                time.Duration `env:"TH_SAVE_TIMEOUT" envDefault:"2m"`

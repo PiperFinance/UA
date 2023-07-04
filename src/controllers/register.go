@@ -3,12 +3,13 @@ package controllers
 import (
 	"strings"
 
-	"github.com/PiperFinance/UA/src/conf"
-	"github.com/PiperFinance/UA/src/jobs"
-	"github.com/PiperFinance/UA/src/models"
-	"github.com/PiperFinance/UA/src/schemas"
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/crypto/bcrypt"
+
+	"github.com/PiperFinance/UA/src/bg/tasks"
+	"github.com/PiperFinance/UA/src/conf"
+	"github.com/PiperFinance/UA/src/models"
+	"github.com/PiperFinance/UA/src/schemas"
 )
 
 func SignUpUser(c *fiber.Ctx) error {
@@ -55,12 +56,11 @@ func SignUpUser(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{"status": "error", "message": "Something bad happened"})
 	}
 
-	o := (jobs.SyncAddress{Address: newUser.Addresses[0]})
-	go func(o jobs.SyncAddress) {
-		if err := o.ExecuteAll(); err != nil {
+	go func(add *models.Address) {
+		if err := tasks.EnqueueSyncAdd(add); err != nil {
 			conf.Logger.Error(err)
 		}
-	}(o)
+	}(newUser.Addresses[0])
 
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "data": fiber.Map{"user": newUser}})
 }

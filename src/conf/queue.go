@@ -3,11 +3,9 @@ package conf
 import (
 	"context"
 	"fmt"
-	"net/http"
 	"time"
 
 	"github.com/hibiken/asynq"
-	"github.com/hibiken/asynqmon"
 )
 
 var (
@@ -46,6 +44,9 @@ const (
 	FetchQ       = "fetch"
 	ParseQ       = "Parse"
 	ProcessQ     = "Process"
+	UASyncBalQ   = "UA:SyncBal"
+	UASyncTHQ    = "UA:SyncTH"
+	UASyncNTQ    = "UA:SyncNT"
 	MainQ        = "main"
 	DefaultQ     = "default"
 	UnImportantQ = "Un-Important"
@@ -64,13 +65,9 @@ func LoadQueue() {
 		Concurrency:  int(Config.MaxConcurrency),
 		ErrorHandler: &QueueErrorHandler{},
 		Queues: map[string]int{
-			ProcessQ:     8,
-			FetchQ:       6,
-			ParseQ:       6,
-			ScanQ:        3,
-			MainQ:        4,
-			DefaultQ:     3,
-			UnImportantQ: 1,
+			UASyncBalQ: 9,
+			UASyncNTQ:  5,
+			UASyncTHQ:  2,
 		},
 	})
 	mux = asynq.NewServeMux()
@@ -113,13 +110,4 @@ func RunScheduler(queueSchedules []QueueSchedules) {
 	if err2 := QueueScheduler.Start(); err2 != nil {
 		Logger.Panic(err2)
 	}
-}
-
-func RunMonitor(URL string) {
-	h := asynqmon.New(asynqmon.Options{
-		RootPath:     "/mon",
-		RedisConnOpt: asyncQRedisClient,
-	})
-	http.Handle(h.RootPath()+"/", h)
-	Logger.Panic(http.ListenAndServe(URL, nil))
 }

@@ -109,12 +109,12 @@
         "method": "POST",
         "sortNum": 0,
         "created": "2023-06-11T17:34:55.013Z",
-        "modified": "2023-06-28T20:02:43.519Z",
+        "modified": "2023-07-04T20:06:21.357Z",
         "headers": [],
         "params": [],
         "body": {
             "type": "json",
-            "raw": "{\n  \"name\":\"navid\",\n  \"address\":{\n    \"hash\":\"0xB49F17514D6F340d7bcdFfC47526C9A3713697e0\"\n  },\n  \"email\":\"a5s561265564d@asd.asd\",\n  \"password\":\"asd@asd.asd\",\n  \"signedMsg\":\"0xb2dada0d8fcfce587378d844355543f24bb582d73c151aa7819acc119e0b263303883287988f466da28bd782c418ced185ffb3f4bad0dba75c5eeb4aec9dcb581b\"\n}",
+            "raw": "{\n  \"name\":\"navid\",\n  \"address\":{\n    \"hash\":\"0xB49F17514D6F340d7bcdFfC47526C9A3713697e0\"\n  },\n  \"email\":\"a5s564512625564d@asd.asd\",\n  \"password\":\"asd@asd.asd\",\n  \"signedMsg\":\"0xb2dada0d8fcfce587378d844355543f24bb582d73c151aa7819acc119e0b263303883287988f466da28bd782c418ced185ffb3f4bad0dba75c5eeb4aec9dcb581b\"\n}",
             "form": []
         },
         "tests": []

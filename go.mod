@@ -7,10 +7,9 @@ require (
 	github.com/ethereum/go-ethereum v1.11.6
 	github.com/go-playground/validator/v10 v10.14.0
 	github.com/gofiber/fiber/v2 v2.47.0
-	github.com/gofiber/jwt/v3 v3.3.9
-	github.com/golang-jwt/jwt/v4 v4.5.0
+	github.com/golang-jwt/jwt/v5 v5.0.0
 	github.com/google/uuid v1.3.0
-	github.com/hibiken/asynq v0.12.0
+	github.com/hibiken/asynq v0.23.0
 	github.com/mileusna/useragent v1.3.2
 	github.com/swaggo/swag v1.16.1
 	go.mongodb.org/mongo-driver v1.11.4
@@ -27,12 +26,10 @@ require (
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
 	github.com/go-redis/redis/v8 v8.11.4 // indirect
-	github.com/golang-jwt/jwt/v5 v5.0.0 // indirect
+	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
-	github.com/gorilla/mux v1.8.0 // indirect
-	github.com/redis/go-redis/v9 v9.0.3 // indirect
-	github.com/robfig/cron/v3 v3.0.0 // indirect
+	github.com/robfig/cron/v3 v3.0.1 // indirect
 	github.com/stretchr/testify v1.8.3 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
@@ -57,6 +54,7 @@ require (
 	github.com/go-openapi/swag v0.22.3 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
+	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/go-stack/stack v1.8.1 // indirect
 	github.com/gofiber/contrib/jwt v1.0.2
 	github.com/golang/snappy v0.0.5-0.20220116011046-fa5810519dcb // indirect
