@@ -34,6 +34,7 @@ services:
       JWT_REFRESH_EXPIRED_IN: 168h
       JWT_ACCESS_EXPIRED_IN: 100h
       JWT_MAXAGE: 168h
+      TH_SAVE_TIMEOUT: 7m
       BS_URL: http://BS:6001
       PS_URL: http://PS:6002
       UA_URL: http://UA:6003
