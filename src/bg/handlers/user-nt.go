@@ -47,7 +47,7 @@ func queryNFTs(c context.Context, Address common.Address) error {
 	cl := &http.Client{}
 	_, err := cl.Post(url.String(), "application/json", strings.NewReader(
 		fmt.Sprintf("{\"chainIds\": [%s],\"userAddresses\": [\"%s\"],\"secret\":\"------!@#RandomSecret123-------\"}",
-			strings.Join(conf.Config.SupportedChainsStr, ","),
+			"250, 1, 10, 137, 42161, 42220, 56, 100, 1284, 43114, 1313161554",
 			Address.String()),
 	))
 	if err != nil {
