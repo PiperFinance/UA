@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
-	"sync"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/hibiken/asynq"
@@ -45,21 +44,15 @@ func SyncNTFsScheduleTaskHandler(ctx context.Context, task *asynq.Task) error {
 
 func queryNFTs(c context.Context, Address common.Address) error {
 	url := conf.Config.NT_URL.JoinPath(conf.Config.NTSaveNFTs)
-	wg := sync.WaitGroup{}
-	wg.Add(len(conf.Config.SupportedChains))
 	cl := &http.Client{}
-	for _, chain := range conf.Config.SupportedChains {
-		go func(chain int64) {
-			defer wg.Done()
-			_, err := cl.Post(url.String(), "application/json", strings.NewReader(
-				fmt.Sprintf("{\"chainIds\": [%d],\"userAddresses\": [\"%s\"]}", chain, Address.String()),
-			))
-			if err != nil {
-				conf.Logger.Error(err)
-			}
-		}(chain)
+	_, err := cl.Post(url.String(), "application/json", strings.NewReader(
+		fmt.Sprintf("{\"chainIds\": [%s],\"userAddresses\": [\"%s\"],\"secret\":\"------!@#RandomSecret123-------\"}",
+			strings.Join(conf.Config.SupportedChainsStr, ","),
+			Address.String()),
+	))
+	if err != nil {
+		conf.Logger.Error(err)
 	}
-	wg.Wait()
 	_ = c
 	return nil
 }

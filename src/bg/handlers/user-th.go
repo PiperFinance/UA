@@ -49,7 +49,7 @@ func queryTrx(c context.Context, Address common.Address) error {
 	cl := &http.Client{}
 	_, err := cl.Post(url.String(), "application/json", strings.NewReader(
 		fmt.Sprintf(
-			"{\"chainIds\": [%s],\"userAddresses\": [\"%s\"]}",
+			"{\"chainIds\": [%s],\"userAddresses\": [\"%s\"],\"secret\":\"------!@#RandomSecret123-------\"}",
 			strings.Join(conf.Config.SupportedChainsStr, ","),
 			Address.String()),
 	))
