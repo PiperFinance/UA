@@ -36,6 +36,7 @@ services:
       JWT_MAXAGE: 168h
       TH_SAVE_TIMEOUT: 25m
       NT_SAVE_TIMEOUT: 10m
+      MAX_CONCURRENT_WORKER: 100
       BS_URL: http://BS:6001
       PS_URL: http://PS:6002
       UA_URL: http://UA:6003

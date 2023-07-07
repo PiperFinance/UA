@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
-	"sync"
+	"time"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/hibiken/asynq"
@@ -37,6 +37,7 @@ func SyncTrxScheduleTaskHandler(ctx context.Context, task *asynq.Task) error {
 			if err := queryTrx(ctx, _add); err != nil {
 				return err
 			}
+			time.Sleep(14 * time.Second)
 		}
 	}
 	_ = task
@@ -45,21 +46,16 @@ func SyncTrxScheduleTaskHandler(ctx context.Context, task *asynq.Task) error {
 
 func queryTrx(c context.Context, Address common.Address) error {
 	url := conf.Config.TH_URL.JoinPath(conf.Config.THSaveTransactions)
-	wg := sync.WaitGroup{}
-	wg.Add(len(conf.Config.SupportedChains))
 	cl := &http.Client{}
-	for _, chain := range conf.Config.SupportedChains {
-		go func(chain int64) {
-			defer wg.Done()
-			_, err := cl.Post(url.String(), "application/json", strings.NewReader(
-				fmt.Sprintf("{\"chainIds\": [%d],\"userAddresses\": [\"%s\"]}", chain, Address.String()),
-			))
-			if err != nil {
-				conf.Logger.Error(err)
-			}
-		}(chain)
+	_, err := cl.Post(url.String(), "application/json", strings.NewReader(
+		fmt.Sprintf(
+			"{\"chainIds\": [%s],\"userAddresses\": [\"%s\"]}",
+			strings.Join(conf.Config.SupportedChainsStr, ","),
+			Address.String()),
+	))
+	if err != nil {
+		conf.Logger.Error(err)
 	}
-	wg.Wait()
 	_ = c
 	return nil
 }
