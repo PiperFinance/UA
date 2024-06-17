@@ -1,17 +1,40 @@
-FROM tiangolo/uvicorn-gunicorn-fastapi:python3.9
+ARG GO_VERSION=1.20
 
-ENV PYTHONPATH "${PYTHONPATH}:/"
+FROM golang:${GO_VERSION}-alpine AS builder
+
+RUN apk update && apk add alpine-sdk git && rm -rf /var/cache/apk/*
+
+RUN mkdir -p /api
+WORKDIR /api
 ENV PORT=8000
+COPY  ./go.mod .
+COPY ./go.sum .
+RUN go mod download
 
-# Install Poetry
-RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | POETRY_HOME=/opt/poetry python && \
-    cd /usr/local/bin && \
-    ln -s /opt/poetry/bin/poetry && \
-    poetry config virtualenvs.create false
+COPY ./src ./src
+RUN go build -o ./app ./src/main.go
 
-# Copy using poetry.lock* in case it doesn't exist yet
-COPY ./pyproject.toml ./poetry.lock* /app/
+FROM alpine:latest
 
-RUN poetry install --no-root --no-dev
 
-COPY ./app /app
+RUN mkdir -p /api
+WORKDIR /api
+COPY --from=builder /api/app .
+COPY  entrypoint.sh .
+# COPY ./src/data ./data 
+
+RUN apk update && apk add ca-certificates unzip curl tzdata \
+    && cd /tmp \ 
+    && curl -OLSs https://github.com/sosedoff/pgweb/releases/download/v0.14.1/pgweb_linux_amd64.zip \
+    && unzip pgweb_linux_amd64.zip \
+    && mv pgweb_linux_amd64 /api/pgweb \
+    && rm -rf /var/bs/log/ | true \ 
+    && mkdir -p /var/bs/log/ \ 
+    && touch /var/bs/log/err.log \ 
+    && touch /var/bs/log/debug.log \
+    && rm -rf /var/cache/apk/*
+
+
+EXPOSE 8080
+
+ENTRYPOINT ["./entrypoint.sh"]

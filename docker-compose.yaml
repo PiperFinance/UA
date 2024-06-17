@@ -1,18 +1,93 @@
-version: "3.8"
+version: '3'
 
 services:
-  app:
-    build: .
-    env_file:
-      - .env
+  ua:
+    hostname: UA
+    container_name: ua
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
     ports:
-      - "8000:8000"
+      - 6003:6003
+      - 9010:9010
+    environment:
+      API_URL: :6003
+      PGWEB_PORT: 9010
+      PGWEB_AUTH_USER: piperFinance
+      PGWEB_AUTH_PASS: Piper2022
+      PROJECT_NAME: UA
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_HOST: postgresdb
+      DB_PORT: 5432
+      DB_NAME: uatest
+      PS_SYNC_MIN_DELAY: 10s
+      SUPPORTED_CHAINS: 1,250,56,137,43114,42161,9001,100,1284,10,1313161554
+      LOG_LEVEL: debug
+      REDIS_URL: redis://bs_redis:6379
+      REDIS_DB: 1
+      MONGO_URL: mongodb://piperFinance:Piper2022@mongo:27017
+      MONGO_DBNAME: "TEST_BS2"
+      JWT_ACCESS_SECRET: my_ultra_secure_secret
+      JWT_REFRESH_SECRET: my_ultra_secure_secret
+      JWT_REFRESH_EXPIRED_IN: 168h
+      JWT_ACCESS_EXPIRED_IN: 100h
+      JWT_MAXAGE: 168h
+      TH_SAVE_TIMEOUT: 25m
+      NT_SAVE_TIMEOUT: 10m
+      MAX_CONCURRENT_WORKER: 100
+      SAVE_SECRET: "------!@#RandomSecret123-------"
+      BS_URL: http://BS:6001
+      PS_URL: http://PS:6002
+      UA_URL: http://UA:6003
+      TP_URL: http://TP:6004
+      TH_URL: http://th:23456
+      NT_URL: http://nt:34567
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5M"
+        max-file: "2"
+    volumes:
+      - ./config:/api/config
+    networks:
+      - ps_net
+      - bs_net
+      - tp_net
+      - ua_net
+      - th_net
+      - nt_net
+      - postgres_db
+      - mongo_db
+      - bs_redis_db
 
-
-  database:
-    image: postgres:12
-    env_file:
-      - .env
-    ports:
-      - "5432:5432"
-
+networks:
+  postgres_db:
+    name: postgres_db
+  mongo_db:
+    name: mongo_db
+  ua_net:
+    driver: bridge
+    name: ua_net
+  bs_redis_db:
+    external: true
+    name: bs_redis_db
+  redis_db:
+    external: true
+    name: redis_db
+  tp_net:
+    external: true
+    name: tp_net
+  th_net:
+    external: true
+    name: th_default
+  nt_net:
+    external: true
+    name: nt_default
+  ps_net:
+    external: true
+    name: ps_net
+  bs_net:
+    external: true
+    name: bs_net

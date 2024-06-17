@@ -1,0 +1,107 @@
+package main
+
+import (
+	"fmt"
+	"github.com/PiperFinance/UA/src/conf"
+	"github.com/charmbracelet/log"
+	"github.com/google/uuid"
+	"gorm.io/gorm"
+)
+
+// User has and belongs to many languages, use `user_languages` as join table
+type User struct {
+	gorm.Model
+	UUID      uuid.UUID   `gorm:"type:uuid;default:uuid_generate_v4()" json:"uuid"`
+	Name      string      `json:"name,omitempty"`
+	Languages []*Language `gorm:"many2many:user_languages;"`
+}
+
+type Language struct {
+	gorm.Model
+	CountryName string  `json:"cname,omitempty"`
+	Name        string  `json:"name,omitempty"`
+	Users       []*User `gorm:"many2many:user_languages;"`
+}
+
+// Retrieve user list with eager loading languages
+func GetAllUsers(db *gorm.DB) ([]User, error) {
+	var users []User
+	err := db.Model(&User{}).Preload("Languages").Find(&users).Error
+	return users, err
+}
+
+// Retrieve language list with eager loading users
+func GetAllLanguages(db *gorm.DB) ([]Language, error) {
+	var languages []Language
+	err := db.Model(&Language{}).Preload("Users").Find(&languages).Error
+	return languages, err
+}
+
+func init() {
+	if err := conf.LoadConfig("."); err != nil {
+		log.Fatal(err)
+	}
+	if err := conf.ConnectDB(); err != nil {
+		log.Fatal(err)
+	}
+	//if err := conf.DB.AutoMigrate(&User{}, &Language{}); err != nil {
+	//	log.Fatal(err)
+	//}
+}
+
+func main() {
+	//////Create Objects
+	//users := []User{
+	//	User{Name: "Navid"},
+	//	User{Name: "Ida"},
+	//	User{Name: "Who Knows"},
+	//	User{Name: "deja vu"},
+	//}
+	//langs := []Language{
+	//	Language{CountryName: "Iran", Name: "Persian"},
+	//	Language{CountryName: "UK", Name: "English"},
+	//	Language{CountryName: "US", Name: "English"},
+	//	Language{CountryName: "France", Name: "French"},
+	//}
+	////
+	//for _, user := range users {
+	//	if res := conf.DB.Create(&user); res.Error != nil {
+	//		log.Error(res)
+	//	} else {
+	//		log.Info(user.ID)
+	//	}
+	//}
+	//
+	//for _, lang := range langs {
+	//	if res := conf.DB.Create(&lang); res.Error != nil {
+	//		log.Error(res)
+	//	} else {
+	//		log.Info(lang.ID)
+	//	}
+	//}
+	//
+	//// Add Langs to User
+	//user := User{}
+	//conf.DB.First(&user, "name = ?", "Navid")
+	//user.Languages = make([]*Language, len(langs))
+	//for i, lang := range langs {
+	//	conf.DB.First(&lang, "country_name = ?", lang.CountryName)
+	//	c := lang
+	//	user.Languages[i] = &c
+	//}
+	//if res := conf.DB.Save(&user); res.Error != nil {
+	//	log.Error(res)
+	//} else {
+	//	log.Info(user.ID)
+	//}
+	//_ = users
+	//_ = langs
+	lang := Language{}
+	users := []User{}
+
+	conf.DB.First(&lang, "name = ?", "Persian")
+	fmt.Println(conf.DB.Model(&lang).Association("Users").Find(&users))
+	fmt.Println(lang.Users, lang.ID)
+	fmt.Println(users)
+
+}

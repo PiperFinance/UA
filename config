@@ -1,0 +1,18 @@
+PROJECT_NAME=UA
+BACKEND_CORS_ORIGINS=["*"]
+# "http://localhost:8000", "https://localhost:8000", "http://localhost", "https://localhost"]
+
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=ua2
+
+MONGO_URL=mongodb://piperFinance:Piper2022@mongo:27017
+MONGO_DBNAME="TEST_BS2"
+
+JWT_ACCESS_SECRET=my_ultra_secure_secret
+JWT_REFRESH_SECRET=my_ultra_secure_secret
+JWT_REFRESH_EXPIRED_IN=168h
+JWT_ACCESS_EXPIRED_IN=100m
+JWT_MAXAGE=168h
